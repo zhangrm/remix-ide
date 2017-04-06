@@ -56,10 +56,14 @@
 	background-color: #C6CFF7;
 	font-weight: bold;
 	display: flex;
-	justify-content: space-between;
+	justify-content: center;
 	word-wrap: break-word;
 	position: relative;
 	border-radius: 3px;
+}
+
+.udapp .definitionTitle {
+	background-color: #C6CFD9;
 }
 
 .udapp .title:hover {
@@ -157,6 +161,7 @@
 	opacity: 0.5;
 	margin-right: 0.4em;
 	font-size: 10px;
+	margin-top: 0.2em;
 }
 
 .udapp .instance.hide > *:not(.title) {

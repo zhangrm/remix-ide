@@ -122,7 +122,7 @@ function renderModules (modules) {
     return yo`<div>
                 <br>
                 <label>
-                <b>${category[0].categoryDisplayName}</b> (
+                <b>${category[0].categoryDisplayName}</b>
                 </label>
                 ${entriesDom}
               </div>`

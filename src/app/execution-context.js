@@ -104,11 +104,15 @@ function ExecutionContext () {
 
   function executionContextChange (context) {
     if (context === 'web3' && !confirm('Are you sure you want to connect to a local ethereum node?')) {
+      return false
     } else if (context === 'injected' && injectedProvider === undefined) {
+      return false
     } else {
       if (context === 'web3') {
         executionContext = context
-        setProviderFromEndpoint()
+        var endpoint = prompt('Please type Web3 Provider Endpoint', 'http://localhost:8545')
+        setProviderFromEndpoint(endpoint)
+        self.event.trigger('web3EndpointChanged')
         self.event.trigger('contextChanged', ['web3'])
       } else if (context === 'injected') {
         executionContext = context
@@ -121,6 +125,7 @@ function ExecutionContext () {
         })
         self.event.trigger('contextChanged', ['vm'])
       }
+      return true
     }
   }
 
@@ -137,19 +142,11 @@ function ExecutionContext () {
   --------------------------------------------------------------------------- */
 
   var selectExEnv = document.querySelector('#selectExEnv')
-  selectExEnv.addEventListener('change', optionSelected)
-  function optionSelected (event) {
-    var selectedValue = selectExEnv.options[ selectExEnv.selectedIndex ].value
-    if (selectedValue === 'injected') { executionContextChange(selectedValue) }
-    if (selectedValue === 'vm') { console.log('vm') }
-    if (selectedValue === 'web3') {
-      var endpoint = prompt('Please type Web3 Provider Endpoint', 'http://localhost:8545')
-      setProviderFromEndpoint(endpoint)
-      if (executionContext === 'web3') {
-        self.event.trigger('web3EndpointChanged')
-      }
+  selectExEnv.addEventListener('change', function (event) {
+    if (!executionContextChange(selectExEnv.options[selectExEnv.selectedIndex].value)) {
+      selectExEnv.value = executionContext
     }
-  }
+  })
 }
 
 module.exports = ExecutionContext
