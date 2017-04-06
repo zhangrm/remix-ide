@@ -154,6 +154,7 @@ body {
 
 #header {
     font-size: 13px;
+    height: 100%;
 }
 
 #header #solIcon {
@@ -189,6 +190,7 @@ body {
     clear: both;
     overflow: auto;
     background-color: #F4F6FF;
+    height: 100%;
 }
 
 #header #optionViews > div {
