@@ -177,6 +177,7 @@ UniversalDApp.prototype.render = function () {
     } else {
       var $title = $('<span class="title"/>').text(self.contracts[c].name)
       if (self.contracts[c].bytecode) {
+        $title.addClass('definitionTitle')
         $title.append($('<div class="size"/>').text((self.contracts[c].bytecode.length / 2) + ' bytes'))
       }
       $contractEl.append($title).append(self.getCreateInterface($contractEl, self.contracts[c]))
