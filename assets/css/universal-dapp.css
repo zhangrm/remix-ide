@@ -157,6 +157,7 @@
 	opacity: 0.5;
 	margin-right: 0.4em;
 	font-size: 10px;
+	margin-top: 0.2em;
 }
 
 .udapp .instance.hide > *:not(.title) {
