@@ -19,7 +19,6 @@ while [ ! -f "$SAUCECONNECT_READYFILE" ]; do
   sleep .5
 done
 
-# npm run browser-test-remote-parallel || TEST_EXITCODE=1
 npm run nightwatch_remote_parallel || TEST_EXITCODE=1
 
 node ci/sauceDisconnect.js "$SAUCECONNECT_USERNAME" "$SAUCECONNECT_ACCESSKEY" "$SAUCECONNECT_JOBIDENTIFIER"

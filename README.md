@@ -51,21 +51,22 @@ The tests are written using [tape](https://www.npmjs.com/package/tape).
 Run the unit tests via: `npm test`
 
 For local headless browser tests run `npm run test-browser`
-(Requires selenium to be installed - can be done with `npm run selenium-install`)
+  * Requires mock compiler - can be done with `npm run make-mock-compiler`
+  * Requires selenium to be installed - can be done with `npm run selenium-install`
 
-## Browser Testing
+## ~~Browser Testing~~
 
-To run the Selenium tests via Nightwatch serve the app through a local web server:
+~~To run the Selenium tests via Nightwatch serve the app through a local web server:~~
 
-	npm run serve # starts web server at localhost:8080
+	~~npm run serve # starts web server at localhost:8080~~
 
-Then you will need to either:
+~~Then you will need to either:~~
 
-1. Have a Selenium server running locally on port 4444.
-	- Run: `npm run browser-test`
-2. Or, install and run SauceConnect.
-	- Run: `sc -u <USERNAME> -k <ACCESS_KEY>` (see `.travis.yml` for values)
-	- Run: `npm run browser-test-sc`
+~~1. Have a Selenium server running locally on port 4444.~~
+	~~- Run: `npm run browser-test`~~
+~~2. Or, install and run SauceConnect.~~
+	~~- Run: `sc -u <USERNAME> -k <ACCESS_KEY>` (see `.travis.yml` for values)~~
+	~~- Run: `npm run browser-test-sc`~~
 
 ## Usage as a Chrome Extension
 
