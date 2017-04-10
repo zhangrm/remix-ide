@@ -196,7 +196,7 @@ var run = function () {
   filepanel.className = css.filepanel
   var FilePanelAPI = {
     createName: createNonClashingName,
-    switchToFile: switchToNextFile
+    switchToFile: switchToFile
   }
   var el = new FilePanel(FilePanelAPI, files)
   filepanel.appendChild(el)
