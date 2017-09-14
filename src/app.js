@@ -489,6 +489,17 @@ function run () {
 
   function onResize () {
     editor.resize(document.querySelector('#editorWrap').checked)
+    modalDialogCustom.prompt('The Title', ' Test message ', {
+      label: 'ok it!',
+      fn: (x) => {
+        console.log('the input value is ' + x)
+      }
+    }, {
+      label: 'can it!',
+      fn: () => {
+        console.log('the user hit cancel')
+      }
+    })
   }
   onResize()
 
