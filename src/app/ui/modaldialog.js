@@ -103,8 +103,6 @@ module.exports = (title, content, ok, cancel) => {
   container.style.display = container.style.display === 'block' ? hide() : show()
 
   function okListener () {
-    // console.log('hit OK')
-
     hide()
     if (ok && ok.fn) ok.fn()
     removeEventListener()
