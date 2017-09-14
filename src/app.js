@@ -489,6 +489,7 @@ function run () {
 
   function onResize () {
     editor.resize(document.querySelector('#editorWrap').checked)
+    modalDialogCustom.prompt('the title', ' Test mess ', function (x) { console.log('the prompt resp is ' + x) })
   }
   onResize()
 
