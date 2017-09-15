@@ -8,24 +8,20 @@ module.exports = {
     modal(title,
       yo`<div>${text}<div><input type='text' name='prompt_text' id='prompt_text'></div></div>`,
       {
-        fn: () => { if (typeof ok.fn === 'function') ok.fn(document.getElementById('prompt_text').value) },
-        label: ok.label
+        fn: () => { if (typeof ok === 'function') ok(document.getElementById('prompt_text').value) }
       },
       {
-        fn: () => { if (typeof cancel.fn === 'function') cancel.fn() },
-        label: cancel.label
+        fn: () => { if (typeof cancel === 'function') cancel() }
       }
     )
   },
   confirm: function (title, text, ok, cancel) {
     modal(title, yo`<div>${text}</div>`,
       {
-        fn: () => { if (typeof ok.fn === 'function') ok.fn() },
-        label: ok.label
+        fn: () => { if (typeof ok === 'function') ok() }
       },
       {
-        fn: () => { if (typeof cancel.fn === 'function') cancel.fn() },
-        label: cancel.label
+        fn: () => { if (typeof cancel === 'function') cancel() }
       }
     )
   }
