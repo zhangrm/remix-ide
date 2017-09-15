@@ -489,7 +489,11 @@ function run () {
 
   function onResize () {
     editor.resize(document.querySelector('#editorWrap').checked)
-    modalDialogCustom.prompt('The Title', ' Test message ', (value) => { console.log('ok' + value) }, () => { console.log('cancel') })
+    modalDialogCustom.confirm('Confirm Test', 'No function inside of OK', {label: 'click'}, {label: 'do not bother', fn: () => { console.log('cancel') }})
+    // modalDialogCustom.prompt('The Title', ' Test message ', {label: 'go for it'}, {label: 'fuggit', fn: () => { console.log('cancel') }})
+    // modalDialogCustom.prompt('The Title', ' Test message ', {label: 'go for it', fn: (value) => { console.log('ok ' + value) }}, {label: 'fuggit', fn: () => { console.log('cancel') }})
+
+    // modalDialogCustom.confirm('The Title', ' Test message ', {label: 'why not?', fn: (value) => { console.log('ok') }}, {label: 'nevermind', fn: () => { console.log('cancel') }})
   }
   onResize()
 
