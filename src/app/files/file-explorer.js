@@ -193,10 +193,11 @@ function fileExplorer (appAPI, files) {
     var path = label.dataset.path
     var isFolder = !!~label.className.indexOf('folder')
     if (isFolder) path += '/'
-    if (confirm(`Do you really want to delete "${path}" ?`)) {
+
+    modalDialogCustom.confirm('', `Do you really want to delete "${path}" ?`, () => {
       li.parentElement.removeChild(li)
       removeSubtree(files, path, isFolder)
-    }
+    })
   }
 
   function editModeOn (event) {
@@ -213,29 +214,41 @@ function fileExplorer (appAPI, files) {
 
   function editModeOff (event) {
     var label = this
+
+    function checkClick (callback) {
+      modalDialogCustom.confirm(null, 'Do you want to rename?', () => { callback(true) })
+    }
+
     if (event.which === 13) event.preventDefault()
     if ((event.type === 'blur' || event.which === 27 || event.which === 13) && label.getAttribute('contenteditable')) {
       var isFolder = label.className.indexOf('folder') !== -1
       var save = textUnderEdit !== label.innerText
-      if (save && event.which !== 13) save = confirm('Do you want to rename?')
-      if (save) {
-        var newPath = label.dataset.path
-        newPath = newPath.split('/')
-        newPath[newPath.length - 1] = label.innerText
-        newPath = newPath.join('/')
-        if (label.innerText === '') {
-          modalDialogCustom.alert('File name cannot be empty')
-          label.innerText = textUnderEdit
-        } else if (label.innerText.match(/(\/|:|\*|\?|"|<|>|\\|\||')/) !== null) {
-          modalDialogCustom.alert('Special characters are not allowed')
-          label.innerText = textUnderEdit
-        } else if (!files.exists(newPath)) {
-          files.rename(label.dataset.path, newPath, isFolder)
-        } else {
-          modalDialogCustom.alert('File already exists.')
-          label.innerText = textUnderEdit
-        }
-      } else label.innerText = textUnderEdit
+      if (save && event.which !== 13) {
+        // I'm wrapping the if (save) inside of this checkClick function
+        // there must be a prettier way of doing this
+        checkClick(function (theResult) {
+          save = theResult
+          if (save) {
+            var newPath = label.dataset.path
+            newPath = newPath.split('/')
+            newPath[newPath.length - 1] = label.innerText
+            newPath = newPath.join('/')
+            if (label.innerText === '') {
+              modalDialogCustom.alert('File name cannot be empty')
+              label.innerText = textUnderEdit
+            } else if (label.innerText.match(/(\/|:|\*|\?|"|<|>|\\|\||')/) !== null) {
+              modalDialogCustom.alert('Special characters are not allowed')
+              label.innerText = textUnderEdit
+            } else if (!files.exists(newPath)) {
+              files.rename(label.dataset.path, newPath, isFolder)
+            } else {
+              modalDialogCustom.alert('File already exists.')
+              label.innerText = textUnderEdit
+            }
+          } else label.innerText = textUnderEdit
+        })
+      }
+
       label.removeAttribute('contenteditable')
       label.classList.remove(css.rename)
     }

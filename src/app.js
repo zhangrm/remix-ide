@@ -489,7 +489,6 @@ function run () {
 
   function onResize () {
     editor.resize(document.querySelector('#editorWrap').checked)
-    modalDialogCustom.confirm('Confirm Test', 'No function inside of OK', (value) => { console.log('ok ') }, () => { console.log('cancel') })
   }
   onResize()
 
