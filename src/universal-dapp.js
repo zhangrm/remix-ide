@@ -140,6 +140,8 @@ var css = csjs`
     float: left;
     align-self: center;
     color: ${styles.colors.grey};
+    width: 100%;
+    text-align: left;
   }
   .hasArgs input {
     display: block;
