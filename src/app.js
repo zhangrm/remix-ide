@@ -476,7 +476,7 @@ function run () {
     switchFile: function (path) {
       fileManager.switchFile(path)
     },
-    event: this.event,
+    event: fileManager.event,
     currentFile: function () {
       return config.get('currentFile')
     },
