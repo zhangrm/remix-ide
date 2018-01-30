@@ -493,14 +493,10 @@ function run () {
 
   filePanel.event.register('resize', delta => self._adjustLayout('left', delta))
 
-  setTimeout(function initOpenFile () {
-    var previouslyOpenedFile = config.get('currentFile') || 'browser/ballot.sol'
-    config.set('currentFile', null)
-    filesProviders['browser'].get(previouslyOpenedFile, (error, content) => {
-      if (!error && content) fileManager.switchFile(previouslyOpenedFile)
-      else fileManager.switchFile('browser/ballot.sol')
-    })
-  }, 0)
+  var previouslyOpenedFile = config.get('currentFile')
+  filesProviders['browser'].get(previouslyOpenedFile, (error, content) => {
+    if (!error && content) fileManager.switchFile(previouslyOpenedFile)
+  })
 
   // ----------------- Renderer -----------------
   var rendererAPI = {
