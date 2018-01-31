@@ -11,6 +11,7 @@ var copyToClipboard = require('../ui/copy-to-clipboard')
 var Recorder = require('../../recorder')
 var EventManager = require('remix-lib').EventManager
 var addTooltip = require('../ui/tooltip')
+var ethJSUtil = require('ethereumjs-util')
 
 var csjs = require('csjs-inject')
 var css = require('./styles/run-tab-styles')
@@ -312,6 +313,12 @@ function contractDropdown (events, appAPI, appEvents, instanceContainer) {
     noInstancesText.style.display = 'none'
     var contractNames = document.querySelector(`.${css.contractNames.classNames[0]}`)
     var address = atAddressButtonInput.value
+    if (!ethJSUtil.isValidAddress(address)) {
+      return modalDialogCustom.alert('Invalid address.')
+    }
+    if (/[a-f]/.test(address) && /[A-F]/.test(address) && !ethJSUtil.isValidChecksumAddress(address)) {
+      return modalDialogCustom.alert('Invalid checksum address.')
+    }
     if (/.(.abi)$/.exec(appAPI.currentFile())) {
       modalDialogCustom.confirm(null, 'Do you really want to interact with ' + address + ' using the current ABI definition ?', () => {
         var abi
