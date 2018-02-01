@@ -91,7 +91,7 @@ var css = csjs`
   }
   .dragbar            {
     position          : absolute;
-    top               : 37px;
+    top               : 29px;
     width             : 0.5em;
     right             : 0;
     bottom            : 0;
