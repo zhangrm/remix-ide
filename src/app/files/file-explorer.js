@@ -5,6 +5,7 @@ var modalDialog = require('../ui/modaldialog')
 var modalDialogCustom = require('../ui/modal-dialog-custom')
 var remixLib = require('remix-lib')
 var EventManager = remixLib.EventManager
+var Menu = require('menu-component')
 
 var helper = require('../../lib/helper')
 
@@ -154,7 +155,6 @@ function fileExplorer (appAPI, files) {
       return yo`<label class="${data.children ? css.folder : css.file}"
         data-path="${data.path}"
         style="${isRoot ? 'font-weight:bold;' : ''}"
-        onclick=${editModeOn}
         onkeydown=${editModeOff}
         onblur=${editModeOff}
       >${key.split('/').pop()}</label>`
@@ -174,6 +174,26 @@ function fileExplorer (appAPI, files) {
       self.events.trigger('focus', [key])
       appAPI.config.set('currentFile', key)
     }
+  })
+
+  self.treeView.event.register('leafRightClick', function (key, data, label, event) {
+    var menu = new Menu()
+    menu
+    .add('Rename', () => {
+      textUnderEdit = label.innerText
+      label.setAttribute('contenteditable', true)
+      label.classList.add(css.rename)
+      label.focus()
+    })
+    .add('Remove', () => {
+      modalDialogCustom.confirm(null, `Do you really want to delete "${key}" ?`, () => {
+        files.remove(key)
+      })
+    })
+
+    event.preventDefault()
+    menu.moveTo(event.pageX, event.pageY)
+    menu.show()
   })
 
   self.treeView.event.register('nodeClick', function (path, childrenContainer) {
@@ -208,19 +228,6 @@ function fileExplorer (appAPI, files) {
 
   var textUnderEdit = null
   var textInRename = false
-
-  function editModeOn (event) {
-    if (self.files.readonly) return
-    var label = this
-    var li = label.parentElement.parentElement.parentElement
-    var classes = li.className
-    if (~classes.indexOf('hasFocus') && !label.getAttribute('contenteditable') && label.getAttribute('data-path') !== self.files.type) {
-      textUnderEdit = label.innerText
-      label.setAttribute('contenteditable', true)
-      label.classList.add(css.rename)
-      label.focus()
-    }
-  }
 
   function editModeOff (event) {
     var label = this
