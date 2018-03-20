@@ -37,6 +37,8 @@ var css = csjs`
     ${styles.rightPanel.runTab.box_Instance};
     margin-bottom: 10px;
     padding: 10px 15px 15px 15px;
+    position: relative;
+    overflow: visible;
   }
   .instance .title:before {
     content: "\\25BE";
@@ -55,13 +57,23 @@ var css = csjs`
   .instance.hidesub .udappClose {
       display: flex;
   }
+  .methCaret {
+    margin-right: 5px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+  .group:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
   .buttonsContainer {
     margin-top: 2%;
     display: flex;
     overflow: hidden;
   }
   .contractActions {
-    display: flex;
+    // display: flex;
   }
   .instanceButton {}
   .closeIcon {
@@ -77,8 +89,10 @@ var css = csjs`
     margin-bottom: 0.4em;
   }
   .contractProperty.hasArgs input {
-    width: 75%;
+    min-width: 200px;
     padding: .36em;
+    border-radius: 5px;
+    width: 70%;
   }
   .contractProperty button {
     ${styles.rightPanel.runTab.button_Create}
@@ -112,6 +126,54 @@ var css = csjs`
     align-self: center;
     color: ${styles.appProperties.mainText_Color};
     margin-left: 4px;
+  }
+  .contractActionsContainer {
+    display: flex;
+    width: 98%;
+  }
+  .contractActionsContainerSingle {
+    display: flex;
+    width: 100%;
+  }
+  .contractActionsContainerMulti {
+    display:none;
+    position: absolute;
+    top: 58px;
+    z-index: 1000;
+    width: 90%;
+  }
+  .contractActionsContainerMultiInner {
+    border: 2px solid ${styles.appProperties.warning_BorderColor};
+    padding: 5px 5px 5px 10px;
+    -webkit-box-shadow: 5px 5px 9px 0px rgba(61,61,61,1);
+    -moz-box-shadow: 5px 5px 9px 0px rgba(61,61,61,1);
+    box-shadow: 5px 5px 9px 0px rgba(61,61,61,1);
+    background-color: ${styles.appProperties.primary_BackgroundColor};
+  }
+  .multiHeader {
+    text-align: left;
+    font-size: 10px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .multiArg {
+    margin-bottom: 8px;
+  }
+
+  .multiArg label {
+      float: left;
+      margin-right: 6px;
+      font-size: 10px;
+      width: 20%;
+  }
+  .multiArg button {
+    border-radius: 3px;
+    float: right;
+    margin-right: 5%;
+  }
+  .hasArgs .multiArg input {
+    border-left: 1px solid #dddddd;
   }
   .hasArgs input {
     display: block;
