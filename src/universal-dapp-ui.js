@@ -6,6 +6,7 @@ var yo = require('yo-yo')
 var helper = require('./lib/helper')
 var copyToClipboard = require('./app/ui/copy-to-clipboard')
 var css = require('./universal-dapp-styles')
+var multiParamMan = require('./multiParamManager')
 
 /*
   trigger debugRequested
@@ -158,6 +159,9 @@ UniversalDAppUI.prototype.getCallButton = function (args) {
 
   contractProperty.appendChild(contractActions)
   if (inputs.length) {
+    // here's where to put the part about the multi-params
+    // var multiParam = new multiParamMan()
+    
     var contractActionsContainerSingle = yo`<div class="${css.contractActionsContainerSingle}" ><i class="fa fa-expand ${css.methCaret}" onclick=${switchMethodViewOn}></i></div>`
 
     var contractActionsContainerMulti = yo`<div class="${css.contractActionsContainerMulti}" ></div>`
