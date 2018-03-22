@@ -20,14 +20,16 @@ class MultiParamManager {
 // inputField
 // createMultiFields
 // DOMElement
-  constructor (inputs, udapp, lookupOnly, outputOverride) {
+  constructor (inputs, lookupOnly, clickMultiCallBack) {
+    this.clickMultiCallBack = clickMultiCallBack
+
     this.inputs = inputs
-    this.udapp = udapp
+    // this.udapp = udapp
     this.lookupOnly = lookupOnly
-    this.outputOverride = outputOverride
+    // this.outputOverride = outputOverride
   }
 
-  switchMethodViewOn: function () {
+  switchMethodViewOn () {
     this.parentNode.style.display = 'none'
     var singleCont = this.parentNode.parentNode
     singleCont.querySelector(`.${css.contractActionsContainerMulti}`).style.display = 'block'
@@ -38,7 +40,7 @@ class MultiParamManager {
     this.parentNode.parentNode.previousSibling.style.display = 'flex'
   }
 
-  createMultiFields: function (inputs) {
+  createMultiFields (inputs) {
     if (inputs) {
       return yo`<div>
         ${inputs.map(function (inp) {
@@ -48,18 +50,16 @@ class MultiParamManager {
     }
   }
 
-  clickMultiButton: function () {
+  clickButton () {
+    this.clickMultiCallBack(argArr)
+  }
+
+  clickMultiButton () {
     var argArr = []
     this.inputs.map(function (inp) {
       argArr.push(document.getElementById(inp.name).value)
     })
-    this.udapp.call(true, argArr, this.inputField.value, this.lookupOnly, (decoded) => {
-      this.outputOverride.innerHTML = ''
-      this.outputOverride.appendChild(decoded)
-    })
-
-    this.parentNode.parentNode.parentNode.style.display = 'none'
-    this.parentNode.parentNode.parentNode.parentNode.firstChild.style.display = 'flex'
+    this.clickMultiCallBack(argArr)
   }
 
   render (params) {
