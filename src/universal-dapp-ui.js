@@ -6,7 +6,7 @@ var yo = require('yo-yo')
 var helper = require('./lib/helper')
 var copyToClipboard = require('./app/ui/copy-to-clipboard')
 var css = require('./universal-dapp-styles')
-var multiParamMan = require('./multiParamManager')
+var MultiParamMan = require('./multiParamManager')
 
 /*
   trigger debugRequested
@@ -118,81 +118,81 @@ UniversalDAppUI.prototype.getCallButton = function (args) {
     })
   }
 
-  function clickMultiButton () {
-    var argArr = []
-    args.funABI.inputs.map(function (inp) {
-      argArr.push(document.getElementById(inp.name).value)
-    })
-    self.udapp.call(true, argArr, inputField.value, lookupOnly, (decoded) => {
-      outputOverride.innerHTML = ''
-      outputOverride.appendChild(decoded)
-    })
+  // function clickMultiButton () {
+  //   var argArr = []
+  //   args.funABI.inputs.map(function (inp) {
+  //     argArr.push(document.getElementById(inp.name).value)
+  //   })
+  //   self.udapp.call(true, argArr, inputField.value, lookupOnly, (decoded) => {
+  //     outputOverride.innerHTML = ''
+  //     outputOverride.appendChild(decoded)
+  //   })
 
-    this.parentNode.parentNode.parentNode.style.display = 'none'
-    this.parentNode.parentNode.parentNode.parentNode.firstChild.style.display = 'flex'
-  }
+  //   this.parentNode.parentNode.parentNode.style.display = 'none'
+  //   this.parentNode.parentNode.parentNode.parentNode.firstChild.style.display = 'flex'
+  // }
 
   var contractProperty = yo`<div class="${css.contractProperty} ${css.buttonsContainer}"></div>`
   var contractActions = yo`<div class="${css.contractActions}" ></div>`
   var contractActionsContainer = yo`<div class="${css.contractActionsContainer}" ></div>`
 
-  function switchMethodViewOn () {
-    this.parentNode.style.display = 'none'
-    var singleCont = this.parentNode.parentNode
-    singleCont.querySelector(`.${css.contractActionsContainerMulti}`).style.display = 'block'
-  }
-  function switchMethodViewOff () {
-    // don't use sibling
-    this.parentNode.parentNode.style.display = 'none'
-    this.parentNode.parentNode.previousSibling.style.display = 'flex'
-  }
+  // function switchMethodViewOn () {
+  //   this.parentNode.style.display = 'none'
+  //   var singleCont = this.parentNode.parentNode
+  //   singleCont.querySelector(`.${css.contractActionsContainerMulti}`).style.display = 'block'
+  // }
+  // function switchMethodViewOff () {
+  //   // don't use sibling
+  //   this.parentNode.parentNode.style.display = 'none'
+  //   this.parentNode.parentNode.previousSibling.style.display = 'flex'
+  // }
 
-  function createMultiFields () {
-    if (args.funABI.inputs) {
-      return yo`<div>
-        ${args.funABI.inputs.map(function (inp) {
-          return yo`<div class="${css.multiArg}"><label for="${inp.name}"> ${inp.name}: </label><input placeholder="${inp.type}" id="${inp.name}" title="${inp.name}"></div>`
-        })}
-      </div>`
-    }
-  }
+  // function createMultiFields () {
+  //   if (args.funABI.inputs) {
+  //     return yo`<div>
+  //       ${args.funABI.inputs.map(function (inp) {
+  //         return yo`<div class="${css.multiArg}"><label for="${inp.name}"> ${inp.name}: </label><input placeholder="${inp.type}" id="${inp.name}" title="${inp.name}"></div>`
+  //       })}
+  //     </div>`
+  //   }
+  // }
 
   contractProperty.appendChild(contractActions)
   if (inputs.length) {
     // here's where to put the part about the multi-params
-    // var multiParam = new multiParamMan()
-    
-    var contractActionsContainerSingle = yo`<div class="${css.contractActionsContainerSingle}" ><i class="fa fa-expand ${css.methCaret}" onclick=${switchMethodViewOn}></i></div>`
+    var multiParam = new MultiParamMan(args.funABI.inputs, self.udapp, lookupOnly, outputOverride)
+    multiParam.render()
+    // var contractActionsContainerSingle = yo`<div class="${css.contractActionsContainerSingle}" ><i class="fa fa-expand ${css.methCaret}" onclick=${switchMethodViewOn}></i></div>`
 
-    var contractActionsContainerMulti = yo`<div class="${css.contractActionsContainerMulti}" ></div>`
-    var contractActionsContainerMultiInner = yo`<div class="${css.contractActionsContainerMultiInner}" ></div>`
-    var contractActionsMultiInnerTitle = yo`<div onclick=${switchMethodViewOff} class="${css.multiHeader}"><i class='fa fa-compress ${css.methCaret}'></i> ${title}</div>`
-    var buttonMulti = yo`<button onclick=${clickMultiButton} class="${css.instanceButton}"></button>`
+    // var contractActionsContainerMulti = yo`<div class="${css.contractActionsContainerMulti}" ></div>`
+    // var contractActionsContainerMultiInner = yo`<div class="${css.contractActionsContainerMultiInner}" ></div>`
+    // var contractActionsMultiInnerTitle = yo`<div onclick=${switchMethodViewOff} class="${css.multiHeader}"><i class='fa fa-compress ${css.methCaret}'></i> ${title}</div>`
+    // var buttonMulti = yo`<button onclick=${clickMultiButton} class="${css.instanceButton}"></button>`
 
-    buttonMulti.classList.add(css.call)
-    buttonMulti.setAttribute('title', title)
-    buttonMulti.innerHTML = title
+    // buttonMulti.classList.add(css.call)
+    // buttonMulti.setAttribute('title', title)
+    // buttonMulti.innerHTML = title
 
-    // attach containing div
-    contractActions.appendChild(contractActionsContainer)
+    // // attach containing div
+    // contractActions.appendChild(contractActionsContainer)
 
-    contractActionsContainer.appendChild(contractActionsContainerSingle)
-    // put in expand button and field
-    contractActionsContainerSingle.appendChild(button)
-    contractActionsContainerSingle.appendChild(button)
-    contractActionsContainerSingle.appendChild(inputField)
+    // contractActionsContainer.appendChild(contractActionsContainerSingle)
+    // // put in expand button and field
+    // contractActionsContainerSingle.appendChild(button)
+    // contractActionsContainerSingle.appendChild(button)
+    // contractActionsContainerSingle.appendChild(inputField)
 
-    contractActionsContainer.appendChild(contractActionsContainerMulti)
-    contractActionsContainerMulti.appendChild(contractActionsContainerMultiInner)
-    contractActionsContainerMultiInner.appendChild(contractActionsMultiInnerTitle)
+    // contractActionsContainer.appendChild(contractActionsContainerMulti)
+    // contractActionsContainerMulti.appendChild(contractActionsContainerMultiInner)
+    // contractActionsContainerMultiInner.appendChild(contractActionsMultiInnerTitle)
 
-    var contractMethodFields = createMultiFields()
+    // var contractMethodFields = createMultiFields()
 
-    contractActionsContainerMultiInner.appendChild(contractMethodFields)
+    // contractActionsContainerMultiInner.appendChild(contractMethodFields)
 
-    var contractMethodFieldsSubmit = yo`<div class="${css.group} ${css.multiArg}" ></div>`
-    contractActionsContainerMultiInner.appendChild(contractMethodFieldsSubmit)
-    contractMethodFieldsSubmit.appendChild(buttonMulti)
+    // var contractMethodFieldsSubmit = yo`<div class="${css.group} ${css.multiArg}" ></div>`
+    // contractActionsContainerMultiInner.appendChild(contractMethodFieldsSubmit)
+    // contractMethodFieldsSubmit.appendChild(buttonMulti)
   } else {
     // no containing div - its a lookup with no args
     contractActions.appendChild(button)
