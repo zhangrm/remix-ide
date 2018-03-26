@@ -20,83 +20,83 @@ class MultiParamManager {
 // inputField
 // createMultiFields
 // DOMElement
-  constructor (inputs, lookupOnly, clickMultiCallBack) {
-    this.clickMultiCallBack = clickMultiCallBack
-
+  constructor (inputs, lookupOnly) {
+    // this.clickMultiCallBack = clickMultiCallBack
     this.inputs = inputs
-    // this.udapp = udapp
     this.lookupOnly = lookupOnly
-    // this.outputOverride = outputOverride
   }
 
-  switchMethodViewOn () {
-    this.parentNode.style.display = 'none'
-    var singleCont = this.parentNode.parentNode
-    singleCont.querySelector(`.${css.contractActionsContainerMulti}`).style.display = 'block'
-  }
-  switchMethodViewOff () {
-    // don't use sibling
-    this.parentNode.parentNode.style.display = 'none'
-    this.parentNode.parentNode.previousSibling.style.display = 'flex'
-  }
+  // switchMethodViewOn () {
+  //   this.parentNode.style.display = 'none'
+  //   var singleCont = this.parentNode.parentNode
+  //   singleCont.querySelector(`.${css.contractActionsContainerMulti}`).style.display = 'block'
+  // }
+  // switchMethodViewOff () {
+  //   // don't use sibling
+  //   this.parentNode.parentNode.style.display = 'none'
+  //   this.parentNode.parentNode.previousSibling.style.display = 'flex'
+  // }
 
-  createMultiFields (inputs) {
-    if (inputs) {
-      return yo`<div>
-        ${inputs.map(function (inp) {
-          return yo`<div class="${css.multiArg}"><label for="${inp.name}"> ${inp.name}: </label><input placeholder="${inp.type}" id="${inp.name}" title="${inp.name}"></div>`
-        })}
-      </div>`
-    }
-  }
+  // createMultiFields (inputs) {
+  //   if (inputs) {
+  //     return yo`<div>
+  //       ${inputs.map(function (inp) {
+  //         return yo`<div class="${css.multiArg}"><label for="${inp.name}"> ${inp.name}: </label><input placeholder="${inp.type}" id="${inp.name}" title="${inp.name}"></div>`
+  //       })}
+  //     </div>`
+  //   }
+  // }
 
-  clickButton () {
-    this.clickMultiCallBack(argArr)
-  }
+  // clickButton () {
+  //   this.clickMultiCallBack(argArr)
+  // }
 
-  clickMultiButton () {
-    var argArr = []
-    this.inputs.map(function (inp) {
-      argArr.push(document.getElementById(inp.name).value)
-    })
-    this.clickMultiCallBack(argArr)
-  }
+  // clickMultiButton () {
+  //   var argArr = []
+  //   this.inputs.map(function (inp) {
+  //     argArr.push(document.getElementById(inp.name).value)
+  //   })
+  //   this.clickMultiCallBack(argArr)
+  // }
+     render () {
+      // return this.lookupOnly
+      return "hohohoho"
+     }
+ //  render (params) {
+ //    var contractActionsContainerSingle = yo`<div class="${css.contractActionsContainerSingle}" ><i class="fa fa-expand ${css.methCaret}" onclick=${switchMethodViewOn}></i></div>`
 
-  render (params) {
-    var contractActionsContainerSingle = yo`<div class="${css.contractActionsContainerSingle}" ><i class="fa fa-expand ${css.methCaret}" onclick=${switchMethodViewOn}></i></div>`
+ //    var contractActionsContainerMulti = yo`<div class="${css.contractActionsContainerMulti}" ></div>`
+ //    var contractActionsContainerMultiInner = yo`<div class="${css.contractActionsContainerMultiInner}" ></div>`
+ //    var contractActionsMultiInnerTitle = yo`<div onclick=${switchMethodViewOff} class="${css.multiHeader}"><i class='fa fa-compress ${css.methCaret}'></i> ${title}</div>`
+ //    var buttonMulti = yo`<button onclick=${clickMultiButton} class="${css.instanceButton}"></button>`
 
-    var contractActionsContainerMulti = yo`<div class="${css.contractActionsContainerMulti}" ></div>`
-    var contractActionsContainerMultiInner = yo`<div class="${css.contractActionsContainerMultiInner}" ></div>`
-    var contractActionsMultiInnerTitle = yo`<div onclick=${switchMethodViewOff} class="${css.multiHeader}"><i class='fa fa-compress ${css.methCaret}'></i> ${title}</div>`
-    var buttonMulti = yo`<button onclick=${clickMultiButton} class="${css.instanceButton}"></button>`
+ //    buttonMulti.classList.add(css.call)
+ //    buttonMulti.setAttribute('title', title)
+ //    buttonMulti.innerHTML = title
 
-    buttonMulti.classList.add(css.call)
-    buttonMulti.setAttribute('title', title)
-    buttonMulti.innerHTML = title
+ //    // attach containing div
+ //    contractActions.appendChild(contractActionsContainer)
 
-    // attach containing div
-    contractActions.appendChild(contractActionsContainer)
+ //    contractActionsContainer.appendChild(contractActionsContainerSingle)
+ //    // put in expand button and field
+ //    contractActionsContainerSingle.appendChild(button)
+ //    contractActionsContainerSingle.appendChild(button)
+ //    contractActionsContainerSingle.appendChild(inputField)
 
-    contractActionsContainer.appendChild(contractActionsContainerSingle)
-    // put in expand button and field
-    contractActionsContainerSingle.appendChild(button)
-    contractActionsContainerSingle.appendChild(button)
-    contractActionsContainerSingle.appendChild(inputField)
+ //    contractActionsContainer.appendChild(contractActionsContainerMulti)
+ //    contractActionsContainerMulti.appendChild(contractActionsContainerMultiInner)
+ //    contractActionsContainerMultiInner.appendChild(contractActionsMultiInnerTitle)
 
-    contractActionsContainer.appendChild(contractActionsContainerMulti)
-    contractActionsContainerMulti.appendChild(contractActionsContainerMultiInner)
-    contractActionsContainerMultiInner.appendChild(contractActionsMultiInnerTitle)
+ //    var contractMethodFields = createMultiFields(this.inputs)
 
-    var contractMethodFields = createMultiFields(this.inputs)
+ //    contractActionsContainerMultiInner.appendChild(contractMethodFields)
 
-    contractActionsContainerMultiInner.appendChild(contractMethodFields)
-
-    var contractMethodFieldsSubmit = yo`<div class="${css.group} ${css.multiArg}" ></div>`
-    contractActionsContainerMultiInner.appendChild(contractMethodFieldsSubmit)
-    contractMethodFieldsSubmit.appendChild(buttonMulti)
-  // update this DOMElement so it returns all the html - and this gets attached to the its parent element in each case - right?!
-    return DOMElement
-	}
+ //    var contractMethodFieldsSubmit = yo`<div class="${css.group} ${css.multiArg}" ></div>`
+ //    contractActionsContainerMultiInner.appendChild(contractMethodFieldsSubmit)
+ //    contractMethodFieldsSubmit.appendChild(buttonMulti)
+ //  // update this DOMElement so it returns all the html - and this gets attached to the its parent element in each case - right?!
+ //    return DOMElement
+	// }
 
     // public value () { 
     //
@@ -111,3 +111,4 @@ class MultiParamManager {
         // return 0xabcder
     // }
 }
+module.exports = MultiParamManager

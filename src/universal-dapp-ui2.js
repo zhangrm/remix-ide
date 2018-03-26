@@ -6,8 +6,8 @@ var yo = require('yo-yo')
 var helper = require('./lib/helper')
 var copyToClipboard = require('./app/ui/copy-to-clipboard')
 var css = require('./universal-dapp-styles')
-var MultiParamManager = require('./MultiParamManager')
-var ClassTest = require('./ClassTest')
+// var MultiParamMan = require('./multiParamManager')
+var MultiParamManTest = require('./MultiParamManagerTest')
 
 /*
   trigger debugRequested
@@ -123,22 +123,85 @@ UniversalDAppUI.prototype.getCallButton = function (args) {
     })
   }
 
+  // function clickMultiButton () {
+  //   var argArr = []
+  //   args.funABI.inputs.map(function (inp) {
+  //     argArr.push(document.getElementById(inp.name).value)
+  //   })
+  //   self.udapp.call(true, argArr, inputField.value, lookupOnly, (decoded) => {
+  //     outputOverride.innerHTML = ''
+  //     outputOverride.appendChild(decoded)
+  //   })
+
+  //   this.parentNode.parentNode.parentNode.style.display = 'none'
+  //   this.parentNode.parentNode.parentNode.parentNode.firstChild.style.display = 'flex'
+  // }
+
   var contractProperty = yo`<div class="${css.contractProperty} ${css.buttonsContainer}"></div>`
   var contractActions = yo`<div class="${css.contractActions}" ></div>`
   var contractActionsContainer = yo`<div class="${css.contractActionsContainer}" ></div>`
 
+  // function switchMethodViewOn () {
+  //   this.parentNode.style.display = 'none'
+  //   var singleCont = this.parentNode.parentNode
+  //   singleCont.querySelector(`.${css.contractActionsContainerMulti}`).style.display = 'block'
+  // }
+  // function switchMethodViewOff () {
+  //   // don't use sibling
+  //   this.parentNode.parentNode.style.display = 'none'
+  //   this.parentNode.parentNode.previousSibling.style.display = 'flex'
+  // }
+
+  // function createMultiFields () {
+  //   if (args.funABI.inputs) {
+  //     return yo`<div>
+  //       ${args.funABI.inputs.map(function (inp) {
+  //         return yo`<div class="${css.multiArg}"><label for="${inp.name}"> ${inp.name}: </label><input placeholder="${inp.type}" id="${inp.name}" title="${inp.name}"></div>`
+  //       })}
+  //     </div>`
+  //   }
+  // }
+
   contractProperty.appendChild(contractActions)
   if (inputs.length) {
     // here's where to put the part about the multi-params
+   // var multiParam = new MultiParamMan(args.funABI.inputs, self.udapp, lookupOnly, outputOverride)
+   var multiParamTest = new MultiParamManTest(args.funABI.inputs, self.udapp, lookupOnly, outputOverride)
+    // this is going to return a div that should get attached
+    // do a test
+    var fred = multiParamTest.render()
+    console.log(fred)
+    // var contractActionsContainerSingle = yo`<div class="${css.contractActionsContainerSingle}" ><i class="fa fa-expand ${css.methCaret}" onclick=${switchMethodViewOn}></i></div>`
 
-    var multiParamTest = new MultiParamManager(args.funABI.inputs, self.udapp, lookupOnly, outputOverride)
+    // var contractActionsContainerMulti = yo`<div class="${css.contractActionsContainerMulti}" ></div>`
+    // var contractActionsContainerMultiInner = yo`<div class="${css.contractActionsContainerMultiInner}" ></div>`
+    // var contractActionsMultiInnerTitle = yo`<div onclick=${switchMethodViewOff} class="${css.multiHeader}"><i class='fa fa-compress ${css.methCaret}'></i> ${title}</div>`
+    // var buttonMulti = yo`<button onclick=${clickMultiButton} class="${css.instanceButton}"></button>`
 
-    // but there is the callback function that needs to have the info in it
+    // buttonMulti.classList.add(css.call)
+    // buttonMulti.setAttribute('title', title)
+    // buttonMulti.innerHTML = title
 
-    or this instance will have the scaffolding and then the biz logic is here - so what gets returned is the html but when you click on submit or anything that is done here...
-    So this means that the class just needs to attach all the html and return that and then what gets returned from the constructor? is then appendChilded into the div.
-    Or does this need to be done in a callback.
-    
+    // // attach containing div
+    // contractActions.appendChild(contractActionsContainer)
+
+    // contractActionsContainer.appendChild(contractActionsContainerSingle)
+    // // put in expand button and field
+    // contractActionsContainerSingle.appendChild(button)
+    // contractActionsContainerSingle.appendChild(button)
+    // contractActionsContainerSingle.appendChild(inputField)
+
+    // contractActionsContainer.appendChild(contractActionsContainerMulti)
+    // contractActionsContainerMulti.appendChild(contractActionsContainerMultiInner)
+    // contractActionsContainerMultiInner.appendChild(contractActionsMultiInnerTitle)
+
+    // var contractMethodFields = createMultiFields()
+
+    // contractActionsContainerMultiInner.appendChild(contractMethodFields)
+
+    // var contractMethodFieldsSubmit = yo`<div class="${css.group} ${css.multiArg}" ></div>`
+    // contractActionsContainerMultiInner.appendChild(contractMethodFieldsSubmit)
+    // contractMethodFieldsSubmit.appendChild(buttonMulti)
   } else {
     // no containing div - its a lookup with no args
     contractActions.appendChild(button)
