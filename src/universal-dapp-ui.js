@@ -7,7 +7,6 @@ var helper = require('./lib/helper')
 var copyToClipboard = require('./app/ui/copy-to-clipboard')
 var css = require('./universal-dapp-styles')
 var MultiParamManager = require('./MultiParamManager')
-var ClassTest = require('./ClassTest')
 
 /*
   trigger debugRequested
@@ -48,7 +47,7 @@ UniversalDAppUI.prototype.renderInstanceFromABI = function (contractABI, address
   </div>`
 
   if (self.udapp.removable_instances) {
-    var close = yo`<div class="${css.udappClose}" onclick=${remove}><i class="${css.closeIcon} fa fa-close" aria-hidden="true"></i></div>`
+    var close = yo`<div class="${css.udappClose}" onclick=${remove}><i class="${css.closeIcon} fa fa-close" aria-hidden='true'></i></div>`
     instance.append(close)
   }
 
@@ -98,8 +97,9 @@ UniversalDAppUI.prototype.getCallButton = function (args) {
   inputField.setAttribute('placeholder', inputs)
   inputField.setAttribute('title', inputs)
 
+  // should outputOverride assigned in the class or here?
   var outputOverride = yo`<div class=${css.value}></div>`
-
+  // is title assigned in the class or here?
   var title
   if (args.funABI.name) {
     title = args.funABI.name
@@ -128,17 +128,38 @@ UniversalDAppUI.prototype.getCallButton = function (args) {
   var contractActionsContainer = yo`<div class="${css.contractActionsContainer}" ></div>`
 
   contractProperty.appendChild(contractActions)
+  contractActions.appendChild(contractActionsContainer)
+
   if (inputs.length) {
     // here's where to put the part about the multi-params
+// the callback it to handle the
 
-    var multiParamTest = new MultiParamManager(args.funABI.inputs, self.udapp, lookupOnly, outputOverride)
+    var multiParamManager = new MultiParamManager(inputs, title, lookupOnly, (arg) => {
+      // check if its for a the multiview or not with the isArray
+      if (arg.isArray()) {
+        // SELF!!!!
+        self.udapp.call(true, arg, inputField.value, lookupOnly, (decoded) => {
+          outputOverride.innerHTML = ''
+          outputOverride.appendChild(decoded)
+        })
+        this.parentNode.parentNode.parentNode.style.display = 'none'
+        this.parentNode.parentNode.parentNode.parentNode.firstChild.style.display = 'flex'
+      } else {
+        // arg is a string
+        // previously it had been like this - but that looks just like the self.udapp.call line looks the same ... probs???
+        // self.udapp.call(true, args, inputField.value, lookupOnly, (decoded) => {
+        // outputOverride.innerHTML = ''
+        // outputOverride.appendChild(decoded)
+      }
+    })
+
+    multiParamManager.render(contractActionsContainer)
 
     // but there is the callback function that needs to have the info in it
 
-    or this instance will have the scaffolding and then the biz logic is here - so what gets returned is the html but when you click on submit or anything that is done here...
-    So this means that the class just needs to attach all the html and return that and then what gets returned from the constructor? is then appendChilded into the div.
-    Or does this need to be done in a callback.
-    
+    // or this instance will have the scaffolding and then the biz logic is here - so what gets returned is the html but when you click on submit or anything that is done here...
+    // So this means that the class just needs to attach all the html and return that and then what gets returned from the constructor? is then appendChilded into the div.
+    // Or does this need to be done in a callback.
   } else {
     // no containing div - its a lookup with no args
     contractActions.appendChild(button)
