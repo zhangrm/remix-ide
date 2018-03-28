@@ -43,15 +43,15 @@ class MultiParamManager {
   // clickButton () {
   //   this.clickMultiCallBack(argArr)
   // }
-
-  clickMultiButton () {
-    // should this logic be done here or in the main file?
-    var argArr = []
-    this.inputs.map(function (inp) {
-      argArr.push(document.getElementById(inp.name).value)
-    })
-    this.clickMultiCallBack(argArr)
-  }
+// uncomment this:::
+  // clickMultiButton () {
+  //   // should this logic be done here or in the main file?
+  //   var argArr = []
+  //   this.inputs.map(function (inp) {
+  //     argArr.push(document.getElementById(inp.name).value)
+  //   })
+  //   this.clickMultiCallBack(argArr)
+  // }
 
   // function clickMultiButton () {
   //   var argArr = []
