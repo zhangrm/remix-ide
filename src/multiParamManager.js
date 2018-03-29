@@ -4,19 +4,21 @@ var yo = require('yo-yo')
 var css = require('./universal-dapp-styles')
 
 class MultiParamManager {
-  // constructor (api = {}, events = {}, opts = {}) {
-
-  // DOMElement
-
-  // inputs are the params for the function in the sol file
-  // lookupOnly - is this a lookup a constant - or does it cost gas
-  // outputOverride - is the value of a lookup that can be shown as a bit of json
-
-  constructor (inputs, title, lookupOnly, clickMultiCallBack) {
-    this.clickMultiCallBack = clickMultiCallBack
-    this.inputs = inputs
-    this.title = title
+  
+  /**
+    * run the list of records
+    *
+    * @param {Array} inputSetup
+    * @param {bool} lookupOnly
+    * @param {Object} funABI
+    * @param {Function} clickMultiCallBack
+    *
+    */
+  constructor (inputSetup, lookupOnly, funABI, clickCallBack) {
+    this.inputSetup = inputSetup
     this.lookupOnly = lookupOnly
+    this.funABI = funABI
+    this.clickCallBack = clickCallBack
   }
 
   switchMethodViewOn () {
@@ -30,97 +32,84 @@ class MultiParamManager {
     this.parentNode.parentNode.previousSibling.style.display = 'flex'
   }
 
-  createMultiFields (inputs) {
-    if (inputs) {
+  createMultiFields () {
+    if (this.inputs) {
       return yo`<div>
-        ${inputs.map(function (inp) {
+        ${this.inputs.map(function (inp) {
           return yo`<div class="${css.multiArg}"><label for="${inp.name}"> ${inp.name}: </label><input placeholder="${inp.type}" id="${inp.name}" title="${inp.name}"></div>`
         })}
       </div>`
     }
   }
 
-  // clickButton () {
-  //   this.clickMultiCallBack(argArr)
-  // }
-// uncomment this:::
-  // clickMultiButton () {
-  //   // should this logic be done here or in the main file?
-  //   var argArr = []
-  //   this.inputs.map(function (inp) {
-  //     argArr.push(document.getElementById(inp.name).value)
-  //   })
-  //   this.clickMultiCallBack(argArr)
-  // }
+  render () {
 
-  // function clickMultiButton () {
-  //   var argArr = []
-  //   args.funABI.inputs.map(function (inp) {
-  //     argArr.push(document.getElementById(inp.name).value)
-  //   })
-  //   // !! so I'm using call on udapp previously I had been using on the fuction internalCall(true, argArr)
-  //   // what are all the other args here for?
-  //   self.udapp.call(true, argArr, inputField.value, lookupOnly, (decoded) => {
-  //     outputOverride.innerHTML = ''
-  //     outputOverride.appendChild(decoded)
-  //   })
-  //   // internalCall(true, argArr)
-
-  //   this.parentNode.parentNode.parentNode.style.display = 'none'
-  //   this.parentNode.parentNode.parentNode.parentNode.firstChild.style.display = 'flex'
-  // }
-
-  render (contractActionsContainer) {
-    var contractActionsContainerSingle = yo`<div class="${css.contractActionsContainerSingle}" ><i class="fa fa-expand ${css.methCaret}" onclick=${this.switchMethodViewOn}></i></div>`
-
-    var contractActionsContainerMulti = yo`<div class="${css.contractActionsContainerMulti}" ></div>`
-    var contractActionsContainerMultiInner = yo`<div class="${css.contractActionsContainerMultiInner}" ></div>`
-    var contractActionsMultiInnerTitle = yo`<div onclick=${this.switchMethodViewOff} class="${css.multiHeader}"><i class='fa fa-compress ${css.methCaret}'></i> ${this.title}</div>`
-    var buttonMulti = yo`<button onclick=${this.clickMultiButton} class="${css.instanceButton}"></button>`
-
-    // Here down
-    // just copied it from universal-dapp-ui
-    // var inputs = self.udapp.getInputs(args.funABI)
+    
+    var title
+    if (this.funABI.name) {
+      title = this.funABI.name
+    } else {
+      title = '(fallback)'
+    }
+    
     var inputField = yo`<input></input>`
-    inputField.setAttribute('placeholder', this.inputs)
-    inputField.setAttribute('title', this.inputs)
-
-    if (!this.title) {
-      this.title = '(fallback)'
+    inputField.setAttribute('placeholder', '')
+    inputField.setAttribute('title', '')
+    
+    var onClick = () => {
+       this.clickCallBack(this.funABI.inputs, inputField.value)
     }
 
-    // is the button used in both the single situation and the multi?
-    var button = yo`<button onclick=${this.clickButton} class="${css.instanceButton}"></button>`
-    button.classList.add(css.call)
-    button.setAttribute('title', this.title)
-    button.innerHTML = this.title
+    var contractActionsContainerSingle = yo`<div class="${css.contractActionsContainerSingle}" ><i class="fa fa-expand ${css.methCaret}" onclick=${this.switchMethodViewOn} title=${title} ></i><button onclick=${() => { onClick() }} class="${css.instanceButton} ${css.call}">${title}</button>${inputField}</div>`
 
-    buttonMulti.classList.add(css.call)
-    buttonMulti.setAttribute('title', this.title)
-    buttonMulti.innerHTML = this.title
-    // Here up copied from universal-dapp-ui
+    var multiOnClick = () => {
+      var valArray = contractActionsContainerMultiInner.querySelectorAll('input').value
+      var ret = []
+      for (var el in valArray) {
+        ret.push(el.value)
+      }
+      this.clickCallBack(this.inputs, ret)
+    }
 
-    contractActionsContainer.appendChild(contractActionsContainerSingle)
-    // put in expand button and field
-    contractActionsContainerSingle.appendChild(button)
-    contractActionsContainerSingle.appendChild(button)
-    contractActionsContainerSingle.appendChild(inputField)
+    var button = yo`<button onclick=${() => { multiOnClick() }} class="${css.instanceButton}"></button>`
+    var contractActionsContainerMulti = yo`<div class="${css.contractActionsContainerMulti}" >
+      <div class="${css.contractActionsContainerMultiInner}" >
+        <div onclick=${this.switchMethodViewOff} class="${css.multiHeader}">
+          <i class='fa fa-compress ${css.methCaret}'></i> ${this.title}
+        </div>
+        ${this.createMultiFields()}
+        <div class="${css.group} ${css.multiArg}" >
+          ${button}
+        </div>
+      </div>
+    </div>`
+ 
+    if (this.lookupOnly) {
+      // contractProperty.appendChild(outputOverride)
+    }
 
-    contractActionsContainer.appendChild(contractActionsContainerMulti)
-    contractActionsContainerMulti.appendChild(contractActionsContainerMultiInner)
-    contractActionsContainerMultiInner.appendChild(contractActionsMultiInnerTitle)
+    if (this.lookupOnly) {
+      // contractProperty.classList.add(css.constant)
+      // buttonMulti.setAttribute('title', (title + ' - call'))
+    }
 
-    var contractMethodFields = this.createMultiFields(this.inputs)
+    if (this.funABI.inputs && this.funABI.inputs.length > 0) {
+      // contractProperty.classList.add(css.hasArgs)
+    }
 
-    contractActionsContainerMultiInner.appendChild(contractMethodFields)
+    if (this.funABI.payable === true) {
+      // contractProperty.classList.add(css.payable)
+      // buttonMulti.setAttribute('title', (title + ' - transact (payable)'))
+    }
 
-    var contractMethodFieldsSubmit = yo`<div class="${css.group} ${css.multiArg}" ></div>`
-    contractActionsContainerMultiInner.appendChild(contractMethodFieldsSubmit)
-    contractMethodFieldsSubmit.appendChild(buttonMulti)
-  // update this DOMElement so it returns all the html - and this gets attached to the its parent element in each case - right?!
-    // return DOMElement
-    // or or or ...
-    // or when all this is done - just attach this div ( called...) to the parent div that is passed in as a param
+    if (!this.lookupOnly && this.funABI.payable === false) {
+      // buttonMulti.setAttribute('title', (title + ' - transact (not payable)'))
+    }
+
+    // contractActionsContainer.appendChild(contractActionsContainerSingle)
+    // contractActionsContainer.appendChild(contractActionsContainerMulti)
+    // return contractActionsContainer
+    return yo`<div>${contractActionsContainerSingle} ${contractActionsContainerMulti}</div>`
   }
 
     // public value () {
