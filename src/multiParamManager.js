@@ -4,32 +4,28 @@ var yo = require('yo-yo')
 var css = require('./universal-dapp-styles')
 
 class MultiParamManager {
-  
+
   /**
-    * run the list of records
     *
-    * @param {Array} inputSetup
     * @param {bool} lookupOnly
     * @param {Object} funABI
     * @param {Function} clickMultiCallBack
     *
     */
-  constructor (inputSetup, lookupOnly, funABI, clickCallBack) {
-    this.inputSetup = inputSetup
+  constructor (lookupOnly, funABI, clickCallBack) {
     this.lookupOnly = lookupOnly
     this.funABI = funABI
     this.clickCallBack = clickCallBack
   }
 
   switchMethodViewOn () {
-    this.parentNode.style.display = 'none'
-    var singleCont = this.parentNode.parentNode
-    singleCont.querySelector(`.${css.contractActionsContainerMulti}`).style.display = 'block'
+    this.contractActionsContainerSingle.style.display = 'none'
+    this.contractActionsContainerMulti.style.display = 'flex'
   }
+
   switchMethodViewOff () {
-    // don't use sibling
-    this.parentNode.parentNode.style.display = 'none'
-    this.parentNode.parentNode.previousSibling.style.display = 'flex'
+    this.contractActionsContainerSingle.style.display = 'flex'
+    this.contractActionsContainerMulti.style.display = 'none'
   }
 
   createMultiFields () {
@@ -43,47 +39,51 @@ class MultiParamManager {
   }
 
   render () {
-
-    
     var title
     if (this.funABI.name) {
       title = this.funABI.name
     } else {
       title = '(fallback)'
     }
-    
-    var inputField = yo`<input></input>`
-    inputField.setAttribute('placeholder', '')
-    inputField.setAttribute('title', '')
-    
+
+    var basicInputField = yo`<input></input>`
+    basicInputField.setAttribute('placeholder', '')
+    basicInputField.setAttribute('title', '')
+
     var onClick = () => {
-       this.clickCallBack(this.funABI.inputs, inputField.value)
+      this.clickCallBack(this.funABI.inputs, basicInputField.value)
     }
 
-    var contractActionsContainerSingle = yo`<div class="${css.contractActionsContainerSingle}" ><i class="fa fa-expand ${css.methCaret}" onclick=${this.switchMethodViewOn} title=${title} ></i><button onclick=${() => { onClick() }} class="${css.instanceButton} ${css.call}">${title}</button>${inputField}</div>`
+    this.contractActionsContainerSingle = yo`<div class="${css.contractActionsContainerSingle}" >
+      <i class="fa fa-expand ${css.methCaret}" onclick=${this.switchMethodViewOn} title=${title} ></i>
+      <button onclick=${() => { onClick() }} class="${css.instanceButton} ${css.call}">${title}</button>${basicInputField}
+      </div>`
 
+    var multiFields = this.createMultiFields()
     var multiOnClick = () => {
-      var valArray = contractActionsContainerMultiInner.querySelectorAll('input').value
-      var ret = []
+      var valArray = multiFields.querySelectorAll('input').value
+      var ret = ''
       for (var el in valArray) {
-        ret.push(el.value)
+        if (ret !== '') ret += ','
+        ret += el.value
       }
-      this.clickCallBack(this.inputs, ret)
+      this.clickCallBack(this.funABI.inputs, ret)
     }
 
     var button = yo`<button onclick=${() => { multiOnClick() }} class="${css.instanceButton}"></button>`
-    var contractActionsContainerMulti = yo`<div class="${css.contractActionsContainerMulti}" >
+
+    this.contractActionsContainerMulti = yo`<div class="${css.contractActionsContainerMulti}" >
       <div class="${css.contractActionsContainerMultiInner}" >
         <div onclick=${this.switchMethodViewOff} class="${css.multiHeader}">
           <i class='fa fa-compress ${css.methCaret}'></i> ${this.title}
         </div>
-        ${this.createMultiFields()}
+        ${multiFields}
         <div class="${css.group} ${css.multiArg}" >
           ${button}
         </div>
       </div>
     </div>`
- 
+
     if (this.lookupOnly) {
       // contractProperty.appendChild(outputOverride)
     }
@@ -106,23 +106,8 @@ class MultiParamManager {
       // buttonMulti.setAttribute('title', (title + ' - transact (not payable)'))
     }
 
-    // contractActionsContainer.appendChild(contractActionsContainerSingle)
-    // contractActionsContainer.appendChild(contractActionsContainerMulti)
-    // return contractActionsContainer
-    return yo`<div>${contractActionsContainerSingle} ${contractActionsContainerMulti}</div>`
+    return yo`<div>${this.contractActionsContainerSingle} ${this.contractActionsContainerMulti}</div>`
   }
-
-    // public value () {
-    //
-    //  return JSON like :  {"uint256 p" : "123", "uint256 pp" : "12322" }
-    // }
-
-    // encodedValue () {
-        // // after submit
-        // // return encoded val of all
-        // // var x = value ()
-        // ethereumjs.abi.encode..
-        // return 0xabcder
-    // }
 }
+
 module.exports = MultiParamManager

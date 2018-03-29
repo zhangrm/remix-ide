@@ -6,7 +6,7 @@ var yo = require('yo-yo')
 var helper = require('./lib/helper')
 var copyToClipboard = require('./app/ui/copy-to-clipboard')
 var css = require('./universal-dapp-styles')
-var MultiParamManager = require('./MultiParamManager')
+var MultiParamManager = require('./multiParamManager')
 
 /*
   trigger debugRequested
@@ -92,20 +92,18 @@ UniversalDAppUI.prototype.getCallButton = function (args) {
   // args.contractName [constr only]
   var lookupOnly = args.funABI.constant
 
-  var inputs = self.udapp.getInputs(args.funABI)
-
   var outputOverride = yo`<div class=${css.value}></div>` // show return value
 
-  function clickButton (valArr, inputsCB) {
-    console.log('hit multi', valArr, inputsCB)
-    self.udapp.call(true, args, inputsCB, lookupOnly, (decoded) => {
+  function clickButton (valArr, inputsValues) {
+    console.log('hit multi', valArr, inputsValues)
+    self.udapp.call(true, args, inputsValues, lookupOnly, (decoded) => {
       outputOverride.innerHTML = ''
       outputOverride.appendChild(decoded)
     })
   }
 
-  var multiParamManager = new MultiParamManager(inputs, lookupOnly, args.funABI, (valArray, inputsCB) => {
-      clickButton(valArray, inputsCB)
+  var multiParamManager = new MultiParamManager(lookupOnly, args.funABI, (valArray, inputsValues) => {
+    clickButton(valArray, inputsValues)
   })
 
   var contractActionsContainer = yo`<div class="${css.contractActionsContainer}" >${multiParamManager.render()}</div>`
