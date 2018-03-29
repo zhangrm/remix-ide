@@ -29,9 +29,9 @@ class MultiParamManager {
   }
 
   createMultiFields () {
-    if (this.inputs) {
+    if (this.funABI.inputs) {
       return yo`<div>
-        ${this.inputs.map(function (inp) {
+        ${this.funABI.inputs.map(function (inp) {
           return yo`<div class="${css.multiArg}"><label for="${inp.name}"> ${inp.name}: </label><input placeholder="${inp.type}" id="${inp.name}" title="${inp.name}"></div>`
         })}
       </div>`
@@ -55,26 +55,27 @@ class MultiParamManager {
     }
 
     this.contractActionsContainerSingle = yo`<div class="${css.contractActionsContainerSingle}" >
-      <i class="fa fa-expand ${css.methCaret}" onclick=${this.switchMethodViewOn} title=${title} ></i>
+      <i class="fa fa-expand ${css.methCaret}" onclick=${() => { this.switchMethodViewOn() }} title=${title} ></i>
       <button onclick=${() => { onClick() }} class="${css.instanceButton} ${css.call}">${title}</button>${basicInputField}
       </div>`
 
     var multiFields = this.createMultiFields()
     var multiOnClick = () => {
-      var valArray = multiFields.querySelectorAll('input').value
+      var valArray = multiFields.querySelectorAll('input')
       var ret = ''
-      for (var el in valArray) {
+      for (var k = 0; k < valArray.length; k++) {
+        var el = valArray[k]
         if (ret !== '') ret += ','
         ret += el.value
       }
       this.clickCallBack(this.funABI.inputs, ret)
     }
 
-    var button = yo`<button onclick=${() => { multiOnClick() }} class="${css.instanceButton}"></button>`
+    var button = yo`<button onclick=${() => { multiOnClick() }} class="${css.instanceButton}">${title}</button>`
 
     this.contractActionsContainerMulti = yo`<div class="${css.contractActionsContainerMulti}" >
       <div class="${css.contractActionsContainerMultiInner}" >
-        <div onclick=${this.switchMethodViewOff} class="${css.multiHeader}">
+        <div onclick=${() => { this.switchMethodViewOff() }} class="${css.multiHeader}">
           <i class='fa fa-compress ${css.methCaret}'></i> ${this.title}
         </div>
         ${multiFields}
@@ -83,10 +84,6 @@ class MultiParamManager {
         </div>
       </div>
     </div>`
-
-    if (this.lookupOnly) {
-      // contractProperty.appendChild(outputOverride)
-    }
 
     if (this.lookupOnly) {
       // contractProperty.classList.add(css.constant)
