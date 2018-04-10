@@ -19,6 +19,7 @@ var css = csjs`
     word-break: break-word;
     line-height: initial;
     overflow: visible;
+    margin-bottom: 10px;
   }
   .titleLine {
     display: flex;
@@ -61,6 +62,8 @@ var css = csjs`
     margin-right: 5px;
     cursor: pointer;
     font-size: 12px;
+    padding-top: 5px;
+    vertical-align: top;
   }
   .group:after {
     content: "";
@@ -87,6 +90,7 @@ var css = csjs`
   .contractProperty {
     overflow: auto;
     margin-bottom: 0.4em;
+    width:100%;
   }
   .contractProperty.hasArgs input {
     min-width: 200px;
@@ -118,7 +122,7 @@ var css = csjs`
     width: inherit;
   }
   .contractProperty input {
-    display: none;
+    width: 75%
   }
   .contractProperty > .value {
     box-sizing: border-box;
@@ -137,28 +141,38 @@ var css = csjs`
   }
   .contractActionsContainerMulti {
     display:none;
-    position: absolute;
-    top: 58px;
-    z-index: 1000;
-    width: 90%;
+    width: 100%;
   }
   .contractActionsContainerMultiInner {
-    border: 2px solid ${styles.appProperties.warning_BorderColor};
-    padding: 5px 5px 5px 10px;
-    -webkit-box-shadow: 5px 5px 9px 0px rgba(61,61,61,1);
-    -moz-box-shadow: 5px 5px 9px 0px rgba(61,61,61,1);
-    box-shadow: 5px 5px 9px 0px rgba(61,61,61,1);
+    // border-bottom: 1px solid ${styles.appProperties.solidBorderBox_BorderColor};
+    padding: 0px 5px 5px 0px;
     background-color: ${styles.appProperties.primary_BackgroundColor};
+    width: 100%;
   }
   .multiHeader {
     text-align: left;
     font-size: 10px;
     margin-bottom: 5px;
     font-weight: bold;
-    cursor: pointer;
+    // cursor: pointer;
+  }
+  .multiTitle {
+    ${styles.rightPanel.runTab.button_Create}
+    border-radius: 3px;
+    display: inline-block;
+    width: 97%;
+    font-size: 10px;
+    height: 25px;
+    padding-left: 20px;
+    font-weight: normal;
+    line-height: 25px;
+    cursor: default;
   }
   .multiArg {
     margin-bottom: 8px;
+  }
+  .multiArg input{
+    padding: 5px;
   }
 
   .multiArg label {
@@ -171,6 +185,13 @@ var css = csjs`
     border-radius: 3px;
     float: right;
     margin-right: 5%;
+    font-size: 10px;
+    border-width: 1px;
+    width: inherit; 
+  }
+  .multiHeader button {
+    display: inline-block;
+    width: 94%;
   }
   .hasArgs .multiArg input {
     border-left: 1px solid #dddddd;
