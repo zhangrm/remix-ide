@@ -47,11 +47,23 @@ class MultiParamManager {
     }
 
     var basicInputField = yo`<input></input>`
-    basicInputField.setAttribute('placeholder', '')
+    basicInputField.setAttribute('placeholder', getInputs)
     basicInputField.setAttribute('title', '')
 
     var onClick = () => {
       this.clickCallBack(this.funABI.inputs, basicInputField.value)
+    }
+
+    var getInputs = () => {
+      var inputVars = ''
+      this.funABI.inputs.map(function (inp) {
+        if (!inputVars) {
+          inputVars += inp.type
+        } else {
+          inputVars = ', ' + inp.type
+        }
+        return inputVars
+      })
     }
 
     this.contractActionsContainerSingle = yo`<div class="${css.contractActionsContainerSingle}" >
