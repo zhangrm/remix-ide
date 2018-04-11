@@ -119,7 +119,6 @@ var css = csjs`
     margin:0;
     word-break: inherit;
     outline: none;
-    width: inherit;
   }
   .contractProperty input {
     width: 75%
@@ -144,7 +143,8 @@ var css = csjs`
     width: 100%;
   }
   .contractActionsContainerMultiInner {
-    // border-bottom: 1px solid ${styles.appProperties.solidBorderBox_BorderColor};
+    margin-bottom: 10px;
+    border-bottom: 1px solid ${styles.appProperties.solidBorderBox_BorderColor};
     padding: 0px 5px 5px 0px;
     background-color: ${styles.appProperties.primary_BackgroundColor};
     width: 100%;
@@ -160,7 +160,19 @@ var css = csjs`
     ${styles.rightPanel.runTab.button_Create}
     border-radius: 3px;
     display: inline-block;
-    width: 97%;
+    width: 95%;
+    font-size: 10px;
+    height: 25px;
+    padding-left: 20px;
+    font-weight: normal;
+    line-height: 25px;
+    cursor: default;
+  }
+  .contractProperty.constant .multiTitle {
+    ${styles.rightPanel.runTab.button_Constant}
+    border-radius: 3px;
+    display: inline-block;
+    width: 95%;
     font-size: 10px;
     height: 25px;
     padding-left: 20px;

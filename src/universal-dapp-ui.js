@@ -95,7 +95,6 @@ UniversalDAppUI.prototype.getCallButton = function (args) {
   var outputOverride = yo`<div class=${css.value}></div>` // show return value
 
   function clickButton (valArr, inputsValues) {
-    console.log('hit multi', valArr, inputsValues)
     self.udapp.call(true, args, inputsValues, lookupOnly, (decoded) => {
       outputOverride.innerHTML = ''
       outputOverride.appendChild(decoded)
@@ -104,7 +103,7 @@ UniversalDAppUI.prototype.getCallButton = function (args) {
 
   var multiParamManager = new MultiParamManager(lookupOnly, args.funABI, (valArray, inputsValues) => {
     clickButton(valArray, inputsValues)
-  })
+  }, self.udapp.getInputs(args.funABI))
 
   var contractActionsContainer = yo`<div class="${css.contractActionsContainer}" >${multiParamManager.render()}</div>`
 

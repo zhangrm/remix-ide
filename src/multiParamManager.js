@@ -10,12 +10,14 @@ class MultiParamManager {
     * @param {bool} lookupOnly
     * @param {Object} funABI
     * @param {Function} clickMultiCallBack
+    * @param {string} getInputs
     *
     */
-  constructor (lookupOnly, funABI, clickCallBack) {
+  constructor (lookupOnly, funABI, clickCallBack, inputs) {
     this.lookupOnly = lookupOnly
     this.funABI = funABI
     this.clickCallBack = clickCallBack
+    this.inputs = inputs
   }
 
   switchMethodViewOn () {
@@ -47,28 +49,16 @@ class MultiParamManager {
     }
 
     var basicInputField = yo`<input></input>`
-    basicInputField.setAttribute('placeholder', getInputs)
+    basicInputField.setAttribute('placeholder', this.inputs)
     basicInputField.setAttribute('title', '')
 
     var onClick = () => {
       this.clickCallBack(this.funABI.inputs, basicInputField.value)
     }
 
-    var getInputs = () => {
-      var inputVars = ''
-      this.funABI.inputs.map(function (inp) {
-        if (!inputVars) {
-          inputVars += inp.type
-        } else {
-          inputVars = ', ' + inp.type
-        }
-        return inputVars
-      })
-    }
-
     this.contractActionsContainerSingle = yo`<div class="${css.contractActionsContainerSingle}" >
       <i class="fa fa-caret-right ${css.methCaret}" onclick=${() => { this.switchMethodViewOn() }} title=${title} ></i>
-      <button onclick=${() => { onClick() }} class="${css.instanceButton} ${css.call}">${title}</button>${basicInputField}
+      <button onclick=${() => { onClick() }} class="${css.instanceButton}">${title}</button>${basicInputField}
       </div>`
 
     var multiFields = this.createMultiFields()
@@ -98,25 +88,31 @@ class MultiParamManager {
       </div>
     </div>`
 
+    var contractProperty = yo`<div class="${css.contractProperty}">${this.contractActionsContainerSingle} ${this.contractActionsContainerMulti}</div>`
+
     if (this.lookupOnly) {
-      // contractProperty.classList.add(css.constant)
-      // buttonMulti.setAttribute('title', (title + ' - call'))
+      contractProperty.classList.add(css.constant)
+      button.setAttribute('title', (title + ' - call'))
+      this.contractActionsContainerSingle.querySelector(`.${css.instanceButton}`).setAttribute('title', (title + ' - call'))
     }
 
     if (this.funABI.inputs && this.funABI.inputs.length > 0) {
-      // contractProperty.classList.add(css.hasArgs)
+      contractProperty.classList.add(css.hasArgs)
+    } else {
+      this.contractActionsContainerSingle.querySelector('i').style.visibility = 'hidden'
+      basicInputField.style.display = 'none'
     }
 
     if (this.funABI.payable === true) {
-      // contractProperty.classList.add(css.payable)
-      // buttonMulti.setAttribute('title', (title + ' - transact (payable)'))
+      contractProperty.classList.add(css.payable)
+      button.setAttribute('title', (title + ' - transact (payable)'))
     }
 
     if (!this.lookupOnly && this.funABI.payable === false) {
-      // buttonMulti.setAttribute('title', (title + ' - transact (not payable)'))
+      button.setAttribute('title', (title + ' - transact (not payable)'))
     }
 
-    return yo`<div class="${css.contractProperty}">${this.contractActionsContainerSingle} ${this.contractActionsContainerMulti}</div>`
+    return contractProperty
   }
 }
 
