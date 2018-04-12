@@ -222,7 +222,8 @@ function contractDropdown (events, appAPI, appEvents, instanceContainer) {
   })
 
   var atAddressButtonInput = yo`<input class="${css.input} ataddressinput" placeholder="Load contract from Address" title="atAddress" />`
-  var createButtonInput = yo`<input class="${css.input} create" placeholder="" title="Create" />`
+
+  // var createButtonInput = yo`<input class="${css.input} create" placeholder="" title="Create" />`
   var selectContractNames = yo`<select class="${css.contractNames}" disabled></select>`
 
   function getSelectedContract () {
@@ -237,27 +238,7 @@ function contractDropdown (events, appAPI, appEvents, instanceContainer) {
   }
   appAPI.getSelectedContract = getSelectedContract
 
-  function getInputsString () {
-    if (appAPI.getContract && selectContractNames.selectedIndex >= 0 && selectContractNames.children.length > 0) {
-      var ctrabi = txHelper.getConstructorInterface(getSelectedContract().contract.object.abi)
-      if (ctrabi.inputs.length) {
-        return txHelper.inputParametersDeclarationToString(ctrabi.inputs)
-      }
-    }
-  }
-  function clickButton (valArr, inputsValues) {
-    // self.udapp.call(true, args, inputsValues, lookupOnly, (decoded) => {
-    //   outputOverride.innerHTML = ''
-    //   outputOverride.appendChild(decoded)
-    // })
-  }
-  var ctrabi = txHelper.getConstructorInterface(getSelectedContract().contract.object.abi)
-
-  var multiParamManager = new MultiParamManager(0, ctrabi, (valArray, inputsValues) => {
-    clickButton(valArray, inputsValues)
-  }, getInputsString())
-
-  var createConstructorInstance = yo`<div class="${css.contractActionsContainer} ${css.button}" >${multiParamManager.render()}</div>`
+  var createPanel = yo`<div class="${css.button}"></div>`
 
   var el = yo`
     <div class="${css.container}">
@@ -265,10 +246,7 @@ function contractDropdown (events, appAPI, appEvents, instanceContainer) {
         ${selectContractNames} ${compFails}
       </div>
       <div class="${css.buttons}">
-        <div class="${css.button}">
-          ${createButtonInput}
-          <div class="${css.create}" onclick=${function () { createInstance() }} >Create</div>
-        </div>
+        ${createPanel}
         <div class="${css.button}">
           ${atAddressButtonInput}
           <div class="${css.atAddress}" onclick=${function () { loadFromAddress(appAPI) }}>At Address</div>
@@ -278,23 +256,26 @@ function contractDropdown (events, appAPI, appEvents, instanceContainer) {
   `
 
   function setInputParamsPlaceHolder () {
-    createButtonInput.value = ''
+    // clear out old ones
+    createPanel.innerHTML = ''
+    // createButtonInput.value = ''
     if (appAPI.getContract && selectContractNames.selectedIndex >= 0 && selectContractNames.children.length > 0) {
       var ctrabi = txHelper.getConstructorInterface(getSelectedContract().contract.object.abi)
-      if (ctrabi.inputs.length) {
-        createButtonInput.setAttribute('placeholder', txHelper.inputParametersDeclarationToString(ctrabi.inputs))
-        createButtonInput.removeAttribute('disabled')
-        return
-      }
+      ctrabi.name = 'Deploy'
+      var createConstructorInstance = new MultiParamManager(0, ctrabi, (valArray, inputsValues) => {
+        createInstance(inputsValues)
+      }, txHelper.inputParametersDeclarationToString(ctrabi.inputs))
+      createPanel.appendChild(createConstructorInstance.render())
+      return
+    } else {
+      createPanel.innerHTML = 'No compiled contracts'
     }
-    createButtonInput.setAttribute('placeholder', '')
-    createButtonInput.setAttribute('disabled', true)
   }
 
   selectContractNames.addEventListener('change', setInputParamsPlaceHolder)
 
   // ADD BUTTONS AT ADDRESS AND CREATE
-  function createInstance () {
+  function createInstance (args) {
     var selectedContract = getSelectedContract()
 
     if (selectedContract.contract.object.evm.bytecode.object.length === 0) {
@@ -303,7 +284,6 @@ function contractDropdown (events, appAPI, appEvents, instanceContainer) {
     }
 
     var constructor = txHelper.getConstructorInterface(selectedContract.contract.object.abi)
-    var args = createButtonInput.value
     txFormat.buildData(selectedContract.name, selectedContract.contract.object, appAPI.getContracts(), true, constructor, args, (error, data) => {
       if (!error) {
         appAPI.logMessage(`creation of ${selectedContract.name} pending...`)
