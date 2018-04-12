@@ -13,6 +13,7 @@ var Recorder = require('../../recorder')
 var EventManager = remixLib.EventManager
 var addTooltip = require('../ui/tooltip')
 var ethJSUtil = require('ethereumjs-util')
+var MultiParamManager = require('../../multiParamManager')
 
 var csjs = require('csjs-inject')
 var css = require('./styles/run-tab-styles')
@@ -235,6 +236,28 @@ function contractDropdown (events, appAPI, appEvents, instanceContainer) {
     return null
   }
   appAPI.getSelectedContract = getSelectedContract
+
+  function getInputsString () {
+    if (appAPI.getContract && selectContractNames.selectedIndex >= 0 && selectContractNames.children.length > 0) {
+      var ctrabi = txHelper.getConstructorInterface(getSelectedContract().contract.object.abi)
+      if (ctrabi.inputs.length) {
+        return txHelper.inputParametersDeclarationToString(ctrabi.inputs)
+      }
+    }
+  }
+  function clickButton (valArr, inputsValues) {
+    // self.udapp.call(true, args, inputsValues, lookupOnly, (decoded) => {
+    //   outputOverride.innerHTML = ''
+    //   outputOverride.appendChild(decoded)
+    // })
+  }
+  var ctrabi = txHelper.getConstructorInterface(getSelectedContract().contract.object.abi)
+
+  var multiParamManager = new MultiParamManager(0, ctrabi, (valArray, inputsValues) => {
+    clickButton(valArray, inputsValues)
+  }, getInputsString())
+
+  var createConstructorInstance = yo`<div class="${css.contractActionsContainer} ${css.button}" >${multiParamManager.render()}</div>`
 
   var el = yo`
     <div class="${css.container}">

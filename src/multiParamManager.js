@@ -10,7 +10,7 @@ class MultiParamManager {
     * @param {bool} lookupOnly
     * @param {Object} funABI
     * @param {Function} clickMultiCallBack
-    * @param {string} getInputs
+    * @param {string} inputs
     *
     */
   constructor (lookupOnly, funABI, clickCallBack, inputs) {
