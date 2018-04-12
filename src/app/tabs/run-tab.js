@@ -13,6 +13,7 @@ var Recorder = require('../../recorder')
 var EventManager = remixLib.EventManager
 var addTooltip = require('../ui/tooltip')
 var ethJSUtil = require('ethereumjs-util')
+var MultiParamManager = require('../../multiParamManager')
 
 var csjs = require('csjs-inject')
 var css = require('./styles/run-tab-styles')
@@ -221,7 +222,8 @@ function contractDropdown (events, appAPI, appEvents, instanceContainer) {
   })
 
   var atAddressButtonInput = yo`<input class="${css.input} ataddressinput" placeholder="Load contract from Address" title="atAddress" />`
-  var createButtonInput = yo`<input class="${css.input} create" placeholder="" title="Create" />`
+
+  // var createButtonInput = yo`<input class="${css.input} create" placeholder="" title="Create" />`
   var selectContractNames = yo`<select class="${css.contractNames}" disabled></select>`
 
   function getSelectedContract () {
@@ -236,16 +238,16 @@ function contractDropdown (events, appAPI, appEvents, instanceContainer) {
   }
   appAPI.getSelectedContract = getSelectedContract
 
+  // var constructorABI = txHelper.getConstructorInterface(getSelectedContract().contract.object.abi)
+  var createPanel = yo`<div class="${css.button}">hohoho</div>`
+
   var el = yo`
     <div class="${css.container}">
       <div class="${css.subcontainer}">
         ${selectContractNames} ${compFails}
       </div>
       <div class="${css.buttons}">
-        <div class="${css.button}">
-          ${createButtonInput}
-          <div class="${css.create}" onclick=${function () { createInstance() }} >Create</div>
-        </div>
+        ${createPanel}
         <div class="${css.button}">
           ${atAddressButtonInput}
           <div class="${css.atAddress}" onclick=${function () { loadFromAddress(appAPI) }}>At Address</div>
@@ -255,23 +257,31 @@ function contractDropdown (events, appAPI, appEvents, instanceContainer) {
   `
 
   function setInputParamsPlaceHolder () {
-    createButtonInput.value = ''
+    // createButtonInput.value = ''
     if (appAPI.getContract && selectContractNames.selectedIndex >= 0 && selectContractNames.children.length > 0) {
       var ctrabi = txHelper.getConstructorInterface(getSelectedContract().contract.object.abi)
       if (ctrabi.inputs.length) {
-        createButtonInput.setAttribute('placeholder', txHelper.inputParametersDeclarationToString(ctrabi.inputs))
-        createButtonInput.removeAttribute('disabled')
+        console.log('lenth is ' + ctrabi.inputs.length)
+        var createConstructorInstance = new MultiParamManager(0, ctrabi, (valArray, inputsValues) => {
+          createInstance(inputsValues)
+        }, txHelper.inputParametersDeclarationToString(ctrabi.inputs))
+        createPanel.appendChild(createConstructorInstance.render())
         return
+      } else {
+        console.log('else! 271')
       }
+    } else {
+      console.log('else! 274')
+      createPanel.innerHTML = 'No compiled contracts'
     }
-    createButtonInput.setAttribute('placeholder', '')
-    createButtonInput.setAttribute('disabled', true)
   }
 
+// this event listener is going to update what NOW?
   selectContractNames.addEventListener('change', setInputParamsPlaceHolder)
+  // this had been updating the placeholder in the input - now this needs to be called from inside the class not here and
 
   // ADD BUTTONS AT ADDRESS AND CREATE
-  function createInstance () {
+  function createInstance (args) {
     var selectedContract = getSelectedContract()
 
     if (selectedContract.contract.object.evm.bytecode.object.length === 0) {
@@ -280,7 +290,6 @@ function contractDropdown (events, appAPI, appEvents, instanceContainer) {
     }
 
     var constructor = txHelper.getConstructorInterface(selectedContract.contract.object.abi)
-    var args = createButtonInput.value
     txFormat.buildData(selectedContract.name, selectedContract.contract.object, appAPI.getContracts(), true, constructor, args, (error, data) => {
       if (!error) {
         appAPI.logMessage(`creation of ${selectedContract.name} pending...`)
@@ -347,9 +356,12 @@ function contractDropdown (events, appAPI, appEvents, instanceContainer) {
       appAPI.visitContracts((contract) => {
         contractNames.appendChild(yo`<option>${contract.name}</option>`)
       })
+      // get the params for the new instance and create it
+
     } else {
       selectContractNames.setAttribute('disabled', true)
     }
+    // what do we do with this line- probably create the new instance here instead of somewhere above 
     setInputParamsPlaceHolder()
   }
 
