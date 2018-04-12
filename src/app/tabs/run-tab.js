@@ -239,7 +239,7 @@ function contractDropdown (events, appAPI, appEvents, instanceContainer) {
   appAPI.getSelectedContract = getSelectedContract
 
   // var constructorABI = txHelper.getConstructorInterface(getSelectedContract().contract.object.abi)
-  var createPanel = yo`<div class="${css.button}">hohoho</div>`
+  var createPanel = yo`<div class="${css.button}"></div>`
 
   var el = yo`
     <div class="${css.container}">
@@ -257,28 +257,23 @@ function contractDropdown (events, appAPI, appEvents, instanceContainer) {
   `
 
   function setInputParamsPlaceHolder () {
+    // clear out old ones
+    createPanel.innerHTML = ''
     // createButtonInput.value = ''
     if (appAPI.getContract && selectContractNames.selectedIndex >= 0 && selectContractNames.children.length > 0) {
       var ctrabi = txHelper.getConstructorInterface(getSelectedContract().contract.object.abi)
-      if (ctrabi.inputs.length) {
-        console.log('lenth is ' + ctrabi.inputs.length)
-        var createConstructorInstance = new MultiParamManager(0, ctrabi, (valArray, inputsValues) => {
-          createInstance(inputsValues)
-        }, txHelper.inputParametersDeclarationToString(ctrabi.inputs))
-        createPanel.appendChild(createConstructorInstance.render())
-        return
-      } else {
-        console.log('else! 271')
-      }
+      ctrabi.name = 'Deploy'
+      var createConstructorInstance = new MultiParamManager(0, ctrabi, (valArray, inputsValues) => {
+        createInstance(inputsValues)
+      }, txHelper.inputParametersDeclarationToString(ctrabi.inputs))
+      createPanel.appendChild(createConstructorInstance.render())
+      return
     } else {
-      console.log('else! 274')
       createPanel.innerHTML = 'No compiled contracts'
     }
   }
 
-// this event listener is going to update what NOW?
   selectContractNames.addEventListener('change', setInputParamsPlaceHolder)
-  // this had been updating the placeholder in the input - now this needs to be called from inside the class not here and
 
   // ADD BUTTONS AT ADDRESS AND CREATE
   function createInstance (args) {
@@ -356,12 +351,9 @@ function contractDropdown (events, appAPI, appEvents, instanceContainer) {
       appAPI.visitContracts((contract) => {
         contractNames.appendChild(yo`<option>${contract.name}</option>`)
       })
-      // get the params for the new instance and create it
-
     } else {
       selectContractNames.setAttribute('disabled', true)
     }
-    // what do we do with this line- probably create the new instance here instead of somewhere above 
     setInputParamsPlaceHolder()
   }
 
