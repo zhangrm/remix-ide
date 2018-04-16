@@ -5,17 +5,18 @@ This document includes:
 
 # remix-* release (npm release, github release) 
    
- - For a specifix module (lib/core/debug/ide/solidity/tests)
- - In a new branch, bump the version in package.json, push it and create PR.
- - Wait for tests completion.
- - merge PR
- - build the branch ( `npm run build` for remix-ide ).
- - execute `npm publish`.
- - create new `tag` ( e.g `git tag v0.6.1-alpha.2` ).
- - push the tag ( `git push --tag` ).
- - execute `gren changelog --generate -t <new tag>..<previous tag> --data-source=prs`.
- - in `changelog.md` remove the closed and non merged PR.
- - publish a release in github using the changelog.
+ For a specifix module (lib/core/debug/ide/solidity/tests)
+ 
+ - Make a new branch, bump the version in package.json, push it and create PR.
+ - Wait for the tests to complete.
+ - Merge PR
+ - Build the branch ( `npm run build` for remix-ide ).
+ - Execute `npm publish`.
+ - Create new `tag` ( e.g `git tag v0.6.1-alpha.2` ).
+ - Push the tag ( `git push --tag` ).
+ - Execute `gren changelog --generate -t <new tag>..<previous tag> --data-source=prs`.
+ - In `changelog.md` remove the closed and non merged PR.
+ - Publish the release in github using the changelog.
 
 
 # remix.ethereum.org update
