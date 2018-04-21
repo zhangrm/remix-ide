@@ -38,6 +38,7 @@
     "remix-core": "latest",
     "remix-lib": "latest",
     "remix-solidity": "latest",
+    "remix-tests": "latest",
     "remixd": "git+https://github.com/ethereum/remixd.git",
     "request": "^2.83.0",
     "rimraf": "^2.6.1",
