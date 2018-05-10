@@ -117,7 +117,7 @@ function verifyCallReturnValue (browser, address, checks, done) {
 
 function testFunction (fnFullName, txHash, log, expectedInput, expectedReturn, expectedEvent, callback) {
   // this => browser
-  this.waitForElementPresent('.instance button[title="' + fnFullName + '"]')
+  this.waitForElementVisible('.instance button[title="' + fnFullName + '"]')
     .perform(function (client, done) {
       client.execute(function () {
         document.querySelector('#optionViews').scrollTop = document.querySelector('#optionViews').scrollHeight

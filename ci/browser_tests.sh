@@ -33,15 +33,19 @@ npm run serve &
 
 setupRemixd
 
-wget "$SAUCECONNECT_URL"
-tar -zxvf sc-"$SC_VERSION"-"$OS"."$FILEFORMAT"
-./sc-"$SC_VERSION"-"$OS"/bin/sc -u "$SAUCECONNECT_USERNAME" -k "$SAUCECONNECT_ACCESSKEY" -i "$SAUCECONNECT_JOBIDENTIFIER" --no-ssl-bump-domains all --readyfile "$SAUCECONNECT_READYFILE" &
-while [ ! -f "$SAUCECONNECT_READYFILE" ]; do
-  sleep .5
-done
+#wget "$SAUCECONNECT_URL"
+#tar -zxvf sc-"$SC_VERSION"-"$OS"."$FILEFORMAT"
+#./sc-"$SC_VERSION"-"$OS"/bin/sc -u "$SAUCECONNECT_USERNAME" -k "$SAUCECONNECT_ACCESSKEY" -i "$SAUCECONNECT_JOBIDENTIFIER" --no-ssl-bump-domains all --readyfile "$SAUCECONNECT_READYFILE" &
+#while [ ! -f "$SAUCECONNECT_READYFILE" ]; do
+#  sleep .5
+#done
 
-npm run nightwatch_remote_chrome || TEST_EXITCODE=1
-npm run nightwatch_remote_firefox || TEST_EXITCODE=1
+./ci/BrowserStackLocal --key LNbxoeDrf6XaF2p9xUqj &
+
+sleep 10s
+
+# npm run nightwatch_remote_chrome || TEST_EXITCODE=1
+# npm run nightwatch_remote_firefox || TEST_EXITCODE=1
 npm run nightwatch_remote_safari || TEST_EXITCODE=1
 # npm run nightwatch_remote_ie || TEST_EXITCODE=1
 # npm run nightwatch_remote_parallel || TEST_EXITCODE=1

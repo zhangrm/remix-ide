@@ -12,12 +12,10 @@ module.exports = {
 
   'test_settings': {
     'default': {
-      'launch_url': 'http://ondemand.saucelabs.com:80',
-      'selenium_host': 'ondemand.saucelabs.com',
+      'launch_url': 'https://hub-cloud.browserstack.com:80',
+      'selenium_host': 'hub-cloud.browserstack.com',
       'selenium_port': 80,
       'silent': true,
-      'username': 'chriseth',
-      'access_key': 'b781828a-9e9c-43d8-89d4-2fbb879595ca',
       'use_ssl': false,
       'globals': {
         'waitForConditionTimeout': 10000,
@@ -51,9 +49,15 @@ module.exports = {
 
     'safari': {
       'desiredCapabilities': {
-        'browserName': 'safari',
+        'browserstack.user': 'eth5',
+        'browserstack.key': 'LNbxoeDrf6XaF2p9xUqj',
+        'browserstack.local': true,
         'javascriptEnabled': true,
-        'platform': 'OS X 10.11',
+        'os': 'OS X',
+        'os_version': 'El Capitan',
+        'browserName': 'Safari',
+        'browser_version': '9.1',
+        'browserstack.selenium_version': '3.5.2',
         'version': '10.0',
         'acceptSslCerts': true,
         'build': 'build-' + buildId,

@@ -36,7 +36,7 @@ function runTests (browser, testData) {
   }).click('.runView')
       .setValue('input[placeholder="uint8 _numProposals"]', '1')
       .click('#runTabView button[class^="instanceButton"]')
-      .waitForElementPresent('.instance:nth-of-type(2)')
+      .waitForElementVisible('.instance:nth-of-type(2)')
       .click('.instance:nth-of-type(2)')
       .testFunction('delegate - transact (not payable)', '0x0571a2439ea58bd349dd130afb8aff62a33af14c06de0dbc3928519bdf13ce2e',
         `[vm]\nfrom:0xca3...a733c\nto:Ballot.delegate(address) 0x692...77b3a\nvalue:0 wei\ndata:0x5c1...4d2db\nlogs:0\nhash:0x057...3ce2e`,
