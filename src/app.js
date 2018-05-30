@@ -712,6 +712,7 @@ Please make a backup of your contracts and start using http://remix.ethereum.org
   // ---------------- Righthand-panel --------------------
 
   var rhpAPI = {
+    importFileCb: importFileCb,
     newAccount: (pass, cb) => {
       udapp.newAccount(pass, cb)
     },
