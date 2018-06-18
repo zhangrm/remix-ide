@@ -1,13 +1,12 @@
 var yo = require('yo-yo')
 var csjs = require('csjs-inject')
-var remixLib = require('remix-lib')
-
-var EventManager = remixLib.EventManager
+var registry = require('../../global/registry')
 
 module.exports = class AnalysisTab {
   constructor (opts = { api: {}, events: {} }) {
     const self = this
-    self.event = new EventManager()
+    var {event} = registry.put({api: this, name: 'analysis-tab'})
+    self.event = event
     self._api = opts.api
     self._events = opts.events
     self._view = { el: null }

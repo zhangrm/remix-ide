@@ -1,7 +1,7 @@
 const yo = require('yo-yo')
 const csjs = require('csjs-inject')
-const remixLib = require('remix-lib')
 
+var registry = require('../../global/registry')
 const styleguide = require('../ui/styles-guide/theme-chooser')
 const PluginManager = require('../plugin/pluginManager')
 const TabbedMenu = require('../tabs/tabbed-menu')
@@ -14,13 +14,13 @@ const PluginTab = require('../tabs/plugin-tab')
 const TestTab = require('../tabs/test-tab')
 const RunTab = require('../tabs/run-tab')
 
-const EventManager = remixLib.EventManager
 const styles = styleguide.chooser()
 
 module.exports = class RighthandPanel {
   constructor (api = {}, events = {}, opts = {}) {
     const self = this
-    self.event = new EventManager()
+    var {event} = registry.put({api: this, name: 'rhp'})
+    self.event = event
     self._api = api
     self._api.switchTab = x => { // @TODO: refactor
       if (self._components.tabbedMenu) self._components.tabbedMenu.selectTabByClassName(x)
@@ -48,6 +48,7 @@ module.exports = class RighthandPanel {
 
     self.event.register('plugin-loadRequest', json => {
       const tab = new PluginTab({}, self._events, json)
+      registry.put({api: tab, name: json.title + '-tab'})
       const content = tab.render()
       self._components.tabbedMenu.addTab(json.title, 'plugin', content)
       self._components.pluginManager.register(json, content)

@@ -7,7 +7,6 @@ var csjs = require('csjs-inject')
 var txExecution = remixLib.execution.txExecution
 var txFormat = remixLib.execution.txFormat
 var txHelper = remixLib.execution.txHelper
-var EventManager = remixLib.EventManager
 var helper = require('../../lib/helper.js')
 var executionContext = require('../../execution-context')
 var modalDialogCustom = require('../ui/modal-dialog-custom')
@@ -17,13 +16,14 @@ var Recorder = require('../../recorder')
 var addTooltip = require('../ui/tooltip')
 var css = require('./styles/run-tab-styles')
 var MultiParamManager = require('../../multiParamManager')
+var registry = require('../../global/registry')
 
 function runTab (appAPI = {}, appEvents = {}, opts = {}) {
   /* -------------------------
             VARIABLES
   --------------------------- */
   var self = this
-  var event = new EventManager()
+  var {event} = registry.put({api: this, name: 'run-tab'})
   appEvents.eventManager = event
   self._view = {}
   self.data = {

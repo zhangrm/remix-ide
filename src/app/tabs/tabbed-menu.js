@@ -1,16 +1,16 @@
 var yo = require('yo-yo')
 var csjs = require('csjs-inject')
-var remixLib = require('remix-lib')
 
 var helper = require('../../lib/helper')
 var styles = require('../ui/styles-guide/theme-chooser').chooser()
 
-var EventManager = remixLib.EventManager
+var registry = require('../../global/registry')
 
 module.exports = class TabbedMenu {
   constructor (api = {}, events = {}, opts = {}) {
     const self = this
-    self.event = new EventManager()
+    var {event} = registry.put({api: this, name: 'tabbed-menu'})
+    self.event = event
     self._opts = opts
     self._api = api
     self._events = events
