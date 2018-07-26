@@ -36,9 +36,10 @@
     "npm-link-local": "^1.1.0",
     "npm-run-all": "^4.0.2",
     "onchange": "^3.2.1",
-    "remix-core": "0.0.15",
-    "remix-lib": "0.2.9",
-    "remix-solidity": "0.1.11",
+    "remix-analyzer": "latest",
+    "remix-debug": "latest",
+    "remix-lib": "latest",
+    "remix-solidity": "./remix/remix-solidity",
     "remix-tests": "latest",
     "remixd": "git+https://github.com/ethereum/remixd.git",
     "request": "^2.83.0",
@@ -142,6 +143,7 @@
     "remix-ide": "./bin/remix-ide"
   },
   "scripts": {
+    "test-version": "browserify --version",
     "setupremix": "npm run pullremix && npm run linkremixcore && npm run linkremixlib && npm run linkremixsolidity;",
     "pullremix": "git clone https://github.com/ethereum/remix",
     "linkremixcore": "cd node_modules && rm -rf remix-core && ln -s ../remix/remix-core remix-core && cd ..",

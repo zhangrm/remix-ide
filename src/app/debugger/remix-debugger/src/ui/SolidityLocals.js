@@ -3,8 +3,8 @@ var DropdownPanel = require('./DropdownPanel')
 var remixSolidity = require('remix-solidity')
 var localDecoder = remixSolidity.localDecoder
 var solidityTypeFormatter = require('./SolidityTypeFormatter')
-var remixCore = require('remix-core')
-var StorageViewer = remixCore.storage.StorageViewer
+var remixDebug = require('remix-debug')
+var StorageViewer = remixDebug.storage.StorageViewer
 var yo = require('yo-yo')
 
 class SolidityLocals {
