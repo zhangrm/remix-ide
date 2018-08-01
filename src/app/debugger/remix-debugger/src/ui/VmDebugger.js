@@ -53,6 +53,7 @@ function VmDebugger (_parent, _traceManager, _codeManager, _solidityProxy, _call
     self.view.style.display = 'block'
   })
   _parent.event.register('traceUnloaded', this, function () {
+    if (!self.view) return
     self.view.style.display = 'none'
   })
   _parent.callTree.event.register('callTreeReady', () => {
