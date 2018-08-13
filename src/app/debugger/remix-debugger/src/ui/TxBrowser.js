@@ -55,7 +55,7 @@ function TxBrowser (_parent) {
   this.displayConnectionSetting = true
   this.basicPanel = new DropdownPanel('Transaction', {json: true})
   this.basicPanel.data = {}
-  this.web3 = _parent.web3
+  this.web3 = _parent.debugger.web3
   var self = this
   _parent.event.register('providerChanged', this, function (provider) {
     self.displayConnectionSetting = provider === 'INTERNAL'
@@ -86,7 +86,7 @@ TxBrowser.prototype.submit = function () {
     return
   }
   this.event.trigger('newTxLoading', [this.blockNumber, this.txNumber])
-  try {
+  //try {
     var self = this
     if (this.txNumber.indexOf('0x') !== -1) {
       self.web3.eth.getTransaction(this.txNumber, function (error, result) {
@@ -97,9 +97,9 @@ TxBrowser.prototype.submit = function () {
         self.update(error, result)
       })
     }
-  } catch (e) {
-    self.update(e.message)
-  }
+  //} catch (e) {
+  //  self.update(e.message)
+  //}
 }
 
 TxBrowser.prototype.update = function (error, tx) {
