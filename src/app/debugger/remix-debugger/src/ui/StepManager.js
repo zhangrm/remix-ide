@@ -34,10 +34,10 @@ function StepManager (_parent, _traceManager) {
 
   this.parent.callTree.event.register('callTreeReady', () => {
     this.solidityMode = true
-    this.parent.vmDebugger.asmCode.event.register('hide', () => {
+    _parent.vmDebugger.asmCode.event.register('hide', () => {
       this.solidityMode = this.parent.callTree.reducedTrace.length !== 0
     })
-    this.parent.vmDebugger.asmCode.event.register('show', () => {
+    _parent.vmDebugger.asmCode.event.register('show', () => {
       this.solidityMode = false
     })
     if (this.parent.callTree.functionCallStack.length) {
@@ -87,12 +87,10 @@ StepManager.prototype.resolveToReducedTrace = function (value, incr) {
 }
 
 StepManager.prototype.render = function () {
-  return (
-  yo`<div>
+  return yo`<div>
         ${this.slider.render()}
         ${this.buttonNavigator.render()}
       </div>`
-  )
 }
 
 StepManager.prototype.reset = function () {
