@@ -56,7 +56,6 @@ function Debugger (container, sourceHighlighter, localRegistry) {
   })
 
   executionContext.event.register('contextChanged', this, function (context) {
-    debugger;
     self.switchProvider(context)
   })
 
@@ -110,7 +109,6 @@ Debugger.prototype.debug = function (txHash) {
  * @param {Object} obj  - provider
  */
 Debugger.prototype.addProvider = function (type, obj) {
-  debugger;
   this.debugger.addProvider(type, obj)
 }
 
@@ -120,7 +118,6 @@ Debugger.prototype.addProvider = function (type, obj) {
  * @param {String} type - type/name of the provider to use
  */
 Debugger.prototype.switchProvider = function (type) {
-  debugger;
   this.debugger.switchProvider(type)
 }
 

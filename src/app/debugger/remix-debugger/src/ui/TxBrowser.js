@@ -86,20 +86,20 @@ TxBrowser.prototype.submit = function () {
     return
   }
   this.event.trigger('newTxLoading', [this.blockNumber, this.txNumber])
-  //try {
-    var self = this
-    if (this.txNumber.indexOf('0x') !== -1) {
-      self.web3.eth.getTransaction(this.txNumber, function (error, result) {
-        self.update(error, result)
-      })
-    } else {
-      self.web3.eth.getTransactionFromBlock(this.blockNumber, this.txNumber, function (error, result) {
-        self.update(error, result)
-      })
-    }
-  //} catch (e) {
-  //  self.update(e.message)
-  //}
+  // try {
+  var self = this
+  if (this.txNumber.indexOf('0x') !== -1) {
+    self.web3.eth.getTransaction(this.txNumber, function (error, result) {
+      self.update(error, result)
+    })
+  } else {
+    self.web3.eth.getTransactionFromBlock(this.blockNumber, this.txNumber, function (error, result) {
+      self.update(error, result)
+    })
+  }
+  // } catch (e) {
+  //   self.update(e.message)
+  // }
 }
 
 TxBrowser.prototype.update = function (error, tx) {
