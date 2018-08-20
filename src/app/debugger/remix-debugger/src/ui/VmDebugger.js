@@ -52,11 +52,6 @@ function VmDebugger (_parentUI, _traceManager, _codeManager, _solidityProxy, _ca
     self.solidityState.storageResolver = storageResolver
     self.solidityLocals.storageResolver = storageResolver
     self.fullStoragesChangesPanel.storageResolver = storageResolver
-    self.view.style.display = 'block'
-  })
-  _parent.event.register('traceUnloaded', this, function () {
-    if (!self.view) return
-    self.view.style.display = 'none'
   })
   _parent.callTree.event.register('callTreeReady', () => {
     if (_parent.callTree.reducedTrace.length) {
@@ -69,7 +64,7 @@ function VmDebugger (_parentUI, _traceManager, _codeManager, _solidityProxy, _ca
 }
 
 VmDebugger.prototype.render = function () {
-  var view = yo`<div id='vmdebugger' style='display:none'>
+  var view = yo`<div id='vmdebugger'>
         <div>
             ${this.asmCode.render()}
             ${this.solidityLocals.render()}

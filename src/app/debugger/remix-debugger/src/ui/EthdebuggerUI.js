@@ -170,12 +170,18 @@ EthdebuggerUI.prototype.debug = function (tx) {
 }
 
 EthdebuggerUI.prototype.render = function () {
+  this.debuggerPanelsView = yo`<div class="${css.innerShift}"></div>`
+  this.stepManagerView = yo`<div class="${css.innerShift}"></div>`
+
   this.browserView = yo`<div class="${css.innerShift}">
           ${this.txBrowser.render()}
         </div>`
+
   var view = yo`<div>
         ${this.browserView}
         <div class="${css.statusMessage}" >${this.statusMessage}</div>
+          ${this.stepManagerView}
+          ${this.debuggerPanelsView}
      </div>`
   if (!this.view) {
     this.view = view
@@ -188,6 +194,8 @@ EthdebuggerUI.prototype.unLoad = function () {
   // this.debugger.codeManager.clear()
   // this.debugger.stepManager.reset()
   this.debugger.unLoad()
+  yo.update(this.debuggerPanelsView, yo`<div></div>`)
+  yo.update(this.stepManagerView, yo`<div></div>`)
   this.event.trigger('traceUnloaded')
 }
 
@@ -228,8 +236,8 @@ EthdebuggerUI.prototype.startDebugging = function (blockNumber, txIndex, tx) {
   })
 
   this.vmDebugger = new VmDebugger(this, this.debugger.traceManager, this.debugger.codeManager, this.debugger.solidityProxy, this.debugger.callTree)
-  this.browserView.appendChild(this.stepManager.render())
-  this.view.appendChild(this.vmDebugger.render())
+  yo.update(this.debuggerPanelsView, this.vmDebugger.render())
+  yo.update(this.stepManagerView, this.stepManager.render())
 
   this.debugger.debug(tx)
 
