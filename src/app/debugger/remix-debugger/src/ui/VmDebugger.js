@@ -16,7 +16,8 @@ var yo = require('yo-yo')
 
 function VmDebugger (_parentUI, _traceManager, _codeManager, _solidityProxy, _callTree) {
   let _parent = _parentUI.debugger
-
+  var self = this
+  this.view
   this.asmCode = new CodeListView(_parent, _codeManager)
   this.stackPanel = new StackPanel(_parentUI, _traceManager)
   this.storagePanel = new StoragePanel(_parentUI, _traceManager)
@@ -31,12 +32,13 @@ function VmDebugger (_parentUI, _traceManager, _codeManager, _solidityProxy, _ca
   this.returnValuesPanel = new DropdownPanel('Return Value', {json: true})
   this.returnValuesPanel.data = {}
   _parentUI.event.register('indexChanged', this.returnValuesPanel, function (index) {
-    var self = this
+    if (!self.view) return
+    var innerself = this
     _traceManager.getReturnValue(index, function (error, returnValue) {
       if (error) {
-        self.update([error])
+        innerself.update([error])
       } else if (_parentUI.currentStepIndex === index) {
-        self.update([returnValue])
+        innerself.update([returnValue])
       }
     })
   })
@@ -44,9 +46,8 @@ function VmDebugger (_parentUI, _traceManager, _codeManager, _solidityProxy, _ca
 
   this.fullStoragesChangesPanel = new FullStoragesChangesPanel(_parentUI, _traceManager)
 
-  this.view
-  var self = this
   _parent.event.register('newTraceLoaded', this, function () {
+    if (!self.view) return
     var storageResolver = new StorageResolver({web3: _parent.web3})
     self.storagePanel.storageResolver = storageResolver
     self.solidityState.storageResolver = storageResolver
@@ -54,6 +55,7 @@ function VmDebugger (_parentUI, _traceManager, _codeManager, _solidityProxy, _ca
     self.fullStoragesChangesPanel.storageResolver = storageResolver
   })
   _parent.callTree.event.register('callTreeReady', () => {
+    if (!self.view) return
     if (_parent.callTree.reducedTrace.length) {
       self.solidityLocals.basicPanel.show()
       self.solidityState.basicPanel.show()
@@ -61,6 +63,11 @@ function VmDebugger (_parentUI, _traceManager, _codeManager, _solidityProxy, _ca
       self.asmCode.basicPanel.show()
     }
   })
+}
+
+VmDebugger.prototype.remove = function () {
+  // used to stop listenning on event. bad and should be "refactored"
+  this.view = null
 }
 
 VmDebugger.prototype.render = function () {

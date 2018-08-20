@@ -68,7 +68,6 @@ function EthdebuggerUI (opts) {
   this.txBrowser.event.register('unloadRequested', this, function (blockNumber, txIndex, tx) {
     self.unLoad()
   })
-
 }
 
 EthdebuggerUI.prototype.setManagers = function () {
@@ -163,7 +162,7 @@ EthdebuggerUI.prototype.setCompilationResult = function (compilationResult) {
 EthdebuggerUI.prototype.debug = function (tx) {
   this.setCompilationResult(this.opts.compilationResult())
   if (tx instanceof Object) {
-    this.txBrowser.load(tx.hash)
+    this.txBrowser.load(tx.hash, tx)
   } else if (tx instanceof String) {
     this.txBrowser.load(tx)
   }
@@ -196,6 +195,10 @@ EthdebuggerUI.prototype.unLoad = function () {
   this.debugger.unLoad()
   yo.update(this.debuggerPanelsView, yo`<div></div>`)
   yo.update(this.stepManagerView, yo`<div></div>`)
+  if (this.vmDebugger) this.vmDebugger.remove()
+  if (this.stepManager) this.stepManager.remove()
+  this.vmDebugger = null
+  this.stepManager = null
   this.event.trigger('traceUnloaded')
 }
 
@@ -243,10 +246,6 @@ EthdebuggerUI.prototype.startDebugging = function (blockNumber, txIndex, tx) {
 
   // console.dir(this.vmDebugger.render())
   // console.dir(this.view)
-
-  self.debugger.event.register('newTraceLoaded', function () {
-    // self.
-  })
 
   console.dir('resolving a trace with tx: ')
   console.dir(tx)
