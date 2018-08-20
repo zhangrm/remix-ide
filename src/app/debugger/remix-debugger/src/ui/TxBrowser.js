@@ -46,19 +46,18 @@ var css = csjs`
     margin-bottom: 10px;
   }
 `
-function TxBrowser (_parent) {
+function TxBrowser (_parent, opts) {
   this.event = new EventManager()
 
   this.blockNumber
   this.txNumber
   this.view
-  this.displayConnectionSetting = true
+  this.displayConnectionSetting = opts.displayConnectionSetting
   this.basicPanel = new DropdownPanel('Transaction', {json: true})
   this.basicPanel.data = {}
   this.web3 = _parent.debugger.web3
   var self = this
   _parent.event.register('providerChanged', this, function (provider) {
-    self.displayConnectionSetting = provider === 'INTERNAL'
     self.setDefaultValues()
     if (self.view) {
       yo.update(self.view, self.render())
